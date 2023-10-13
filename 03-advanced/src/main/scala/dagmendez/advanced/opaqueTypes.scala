@@ -1,23 +1,23 @@
-import error.*
-import scala.compiletime.{codeOf,error}
+package dagmendez.advanced
 
+import scala.compiletime.{codeOf, error}
+
+import dagmendez.advanced.error.*
 
 object opaqueTypes:
 
-
-
-  opaque type Name = String
-  opaque type IBAN  = String
+  opaque type Name    = String
+  opaque type IBAN    = String // International Bank Account Number
   opaque type Balance = Double
 
   /*
-  * Validations on the apply method are restricted to those that can be evaluated at compile time.
-  * Most of the API of the basic types (String, Int, etc.) are of no use here.
-  * Notice that the validations are different in the apply method and the from method.
-  * Both validations should be equal and defined in a single places.
-  * `scala.compiletime.codeOf` returns the value of the parameter passed into the inlined method apply
-  * `scala.compiletime.error` generates a custom compiler error.
-  * */
+   * Validations on the apply method are restricted to those that can be evaluated at compile time.
+   * Most of the API of the basic types (String, Int, etc.) are of no use here.
+   * Notice that the validations are different in the apply method and the from method.
+   * Both validations should be equal and defined in a single places.
+   * `scala.compiletime.codeOf` returns the value of the parameter passed into the inlined method apply
+   * `scala.compiletime.error` generates a custom compiler error.
+   * */
 
   object Name:
 
@@ -47,11 +47,11 @@ object opaqueTypes:
   object Balance:
 
     inline def apply(balance: Double): Balance =
-      inline if balance > 1000000.0 | balance < - 1000.0
+      inline if balance > 1000000.0 | balance < -1000.0
       then error(codeOf(balance) + " in invalid.")
       else balance
 
     def from(balance: Double): Either[InvalidBalance, Balance] =
-      if balance > 1000000.0 | balance < - 1000.0
+      if balance > 1000000.0 | balance < -1000.0
       then Left(InvalidBalance(s"First name is invalid with value <$balance>."))
       else Right(balance)

@@ -2,6 +2,9 @@ ThisBuild / organization := "dagmendez"
 
 ThisBuild / scalaVersion := "3.3.1"
 
+ThisBuild / semanticdbEnabled := true
+ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+
 lazy val `opaque-types-and-inline`: Project =
   project
     .in(file("."))
@@ -16,32 +19,19 @@ lazy val naive: Project =
   project
     .in(file("01-naive"))
     .settings(commonScalacOptions)
-    .settings(
-      name := "naive",
-      libraryDependencies ++= Seq(
-      )
-    )
+    .settings(name := "naive")
 
 lazy val standard: Project =
   project
     .in(file("02-standard"))
     .settings(commonScalacOptions)
-    .settings(
-      name := "standard",
-      libraryDependencies ++= Seq(
-      )
-    )
+    .settings(name := "standard")
 
 lazy val advanced: Project =
   project
     .in(file("03-advanced"))
     .settings(commonScalacOptions)
-    .settings(
-      name := "advanced",
-      libraryDependencies ++= Seq(
-      )
-    )
-
+    .settings(name := "advanced")
 
 lazy val professional: Project =
   project
@@ -52,8 +42,6 @@ lazy val professional: Project =
       libraryDependencies ++= Seq(
       )
     )
-
-
 
 lazy val commonScalacOptions = Seq(
   Compile / console / scalacOptions --= Seq(
