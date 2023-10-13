@@ -1,6 +1,6 @@
 object opaqueTypes:
   
-  opaque type FirstName = String
-  opaque type LastName = String
+  opaque type Name = String
   opaque type IBAN = String
+  opaque type Balance = Double
   

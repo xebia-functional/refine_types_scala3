@@ -6,9 +6,9 @@ object opaqueTypes:
 
 
 
-  opaque type FirstName = String
-  opaque type LastName = String
+  opaque type Name = String
   opaque type IBAN  = String
+  opaque type Balance = Double
 
   /*
   * Validations on the apply method are restricted to those that can be evaluated at compile time.
@@ -19,30 +19,18 @@ object opaqueTypes:
   * `scala.compiletime.error` generates a custom compiler error.
   * */
 
-  object FirstName:
+  object Name:
 
-    inline def apply(fn: String): FirstName =
-      inline if fn == ""
-      then error(codeOf(fn) + " is invalid.")
-      else fn
+    inline def apply(name: String): Name =
+      inline if name == ""
+      then error(codeOf(name) + " is invalid.")
+      else name
 
-    def from(fn: String): Either[InvalidName, FirstName] =
+    def from(fn: String): Either[InvalidName, Name] =
       // Here we can access the underlying type API because it is evaluated during runtime.
       if fn.isBlank | (fn.trim.length < fn.length)
       then Left(InvalidName(s"First name is invalid with value <$fn>."))
       else Right(fn)
-
-  object LastName:
-
-    inline def apply(ln: String): LastName =
-      inline if ln == ""
-      then error(codeOf(ln) + " is invalid")
-      else ln
-
-    def from(ln: String): Either[InvalidName, LastName]  =
-      if ln.isBlank | (ln.trim.length < ln.length)
-      then Left(InvalidName(s"Last name is invalid with value <$ln>."))
-      else Right(ln)
 
   object IBAN:
 
@@ -55,3 +43,15 @@ object opaqueTypes:
       if iban.isBlank | iban.contains(" ")
       then Left(InvalidIBAN(s"First name is invalid with value <$iban>."))
       else Right(iban)
+
+  object Balance:
+
+    inline def apply(balance: Double): Balance =
+      inline if balance > 1000000.0 | balance < - 1000.0
+      then error(codeOf(balance) + " in invalid.")
+      else balance
+
+    def from(balance: Double): Either[InvalidBalance, Balance] =
+      if balance > 1000000.0 | balance < - 1000.0
+      then Left(InvalidBalance(s"First name is invalid with value <$balance>."))
+      else Right(balance)

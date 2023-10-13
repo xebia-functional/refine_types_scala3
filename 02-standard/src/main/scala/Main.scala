@@ -13,9 +13,9 @@ object Main:
     * Opaque types apply methods happen during compile time.
     */
     
-    val firstName: FirstName = FirstName("John")
-    val middleName: FirstName = FirstName("Stuart")
-    val lastName: LastName = LastName("Mill")
+    val firstName: Name = Name("John")
+    val middleName: Name = Name("Stuart")
+    val lastName: Name = Name("Mill")
     val iban: IBAN = IBAN("GB33BUKB20201555555555")
     
     val holder = AccountHolder(
@@ -25,7 +25,7 @@ object Main:
       None
     )
 
-    val account = Account(holder, iban)
+    val account = Account(holder, iban, 123.45.asInstanceOf[Balance])
     
     println(account)
   }

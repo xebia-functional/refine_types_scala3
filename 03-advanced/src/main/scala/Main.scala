@@ -4,10 +4,11 @@ import opaqueTypes.*
 object Main:
 
   object HappyApply:
-    val firstName: FirstName = FirstName("John")
-    val middleName: FirstName = FirstName("Stuart")
-    val lastName: LastName = LastName("Mill")
+    val firstName: Name = Name("John")
+    val middleName: Name = Name("Stuart")
+    val lastName: Name = Name("Mill")
     val iban: IBAN = IBAN("GB33BUKB20201555555555")
+    val balance: Balance = Balance(-300.0)
 
     val account: Account = Account(
       AccountHolder(
@@ -15,16 +16,17 @@ object Main:
         Some(middleName),
         lastName,
         secondLastName = None
-      ), iban)
+      ), iban, balance)
 
     def print(): Unit = println(account)
 
   object UnhappyApply:
-    val firstName: FirstName = FirstName("John") // Comment this one an uncomment next line
+    val firstName: Name = Name("John") // Comment this one an uncomment next line
     //val firstName: FirstName = FirstName("") // Uncomment and won't compile
-    val middleName: FirstName = FirstName("Stuart")
-    val lastName: LastName = LastName("Mill")
+    val middleName: Name = Name("Stuart")
+    val lastName: Name = Name("Mill")
     val iban: IBAN = IBAN("GB33BUKB20201555555555")
+    val balance: Balance = Balance(-1000.0)
 
     val account: Account = Account(
       AccountHolder(
@@ -32,15 +34,16 @@ object Main:
         Some(middleName),
         lastName,
         secondLastName = None
-      ), iban)
+      ), iban, balance)
 
     def print(): Unit = println(account)
 
   object HappyFrom:
-    val firstName = FirstName.from("John")
-    val middleName = FirstName.from("Stuart")
-    val lastName = LastName.from("Mill")
+    val firstName = Name.from("John")
+    val middleName = Name.from("Stuart")
+    val lastName = Name.from("Mill")
     val iban = IBAN.from("GB33BUKB20201555555555")
+    val balance = Balance.from(0.0)
 
     val account =
       for
@@ -48,7 +51,8 @@ object Main:
         mn <- middleName
         ln <- lastName
         ib <- iban
-      yield Account(AccountHolder(fn, Some(mn), ln, secondLastName = None), ib)
+        bl <- balance
+      yield Account(AccountHolder(fn, Some(mn), ln, secondLastName = None), ib, bl)
 
     assert(account.isRight)
     def print(): Unit = println(account)
@@ -56,10 +60,11 @@ object Main:
   object UnhappyFrom:
 
     // Play with any field that would crash the validation and return Left
-    val firstName = FirstName.from("John")
-    val middleName = FirstName.from("Stuart ") // This returns Left.
-    val lastName = LastName.from("Mill")
+    val firstName = Name.from("John")
+    val middleName = Name.from("Stuart ") // This returns Left.
+    val lastName = Name.from("Mill")
     val iban = IBAN.from("GB33BUKB20201555555555")
+    val balance = Balance.from(-5000.0) // This returns Left.
 
     val account =
       for
@@ -67,7 +72,8 @@ object Main:
         mn <- middleName
         ln <- lastName
         ib <- iban
-      yield Account(AccountHolder(fn, Some(mn), ln, secondLastName = None), ib)
+        bl <- balance
+      yield Account(AccountHolder(fn, Some(mn), ln, secondLastName = None), ib, bl)
 
     assert(account.isLeft)
     def print(): Unit = println(account)

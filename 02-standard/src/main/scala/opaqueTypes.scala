@@ -2,9 +2,9 @@ object opaqueTypes:
 
 
 
-  opaque type FirstName = String
-  opaque type LastName = String
+  opaque type Name = String
   opaque type IBAN  = String
+  opaque type Balance = Double
 
   /*
   * Opaque types can have companion objects.
@@ -12,11 +12,11 @@ object opaqueTypes:
   * Here we will include the apply method so we can build values of the opaque type safely.
   */
 
-  object FirstName:
-    def apply(fn: String): FirstName = fn
-
-  object LastName:
-    def apply(ln: String): LastName = ln
-
+  object Name:
+    def apply(name: String): Name = name
+  
   object IBAN:
     def apply(iban: String): IBAN = iban
+
+  object Balance:
+    def apply(balance: Double): Balance = balance  

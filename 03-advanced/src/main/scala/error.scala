@@ -8,3 +8,5 @@ object error:
   case class InvalidName(message: String) extends RuntimeException(message) with NoStackTrace
 
   case class InvalidIBAN(message: String) extends RuntimeException(message) with NoStackTrace
+  
+  case class InvalidBalance(message: String) extends RuntimeException(message) with NoStackTrace

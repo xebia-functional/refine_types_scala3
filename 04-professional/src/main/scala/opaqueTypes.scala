@@ -2,12 +2,15 @@ import error.*
 
 import scala.compiletime.{codeOf, constValue, error}
 import scala.compiletime.ops.string.Matches
+import scala.compiletime.ops.double.{<, >}
+import scala.compiletime.ops.boolean.&&
 
 
 object opaqueTypes:
 
   opaque type Name = String
   opaque type IBAN  = String
+  opaque type Balance = Double
 
   /*
   * We explore the power of inlining and the complementary methods of the package `scala.compiletime.ops`
@@ -59,3 +62,17 @@ object opaqueTypes:
       if validation.r.matches(iban)
       then Right(iban)
       else Left(InvalidIBAN(iban + errorMessage))
+
+  object Balance:
+
+    private inline val errorMessage = " is invalid. Balance should be greater than -1,000.00 and smaller than 1,000,000.00"
+
+    inline def apply(balance: Double): Balance =
+      inline if constValue[balance.type  > -1000.0 && balance.type < 1000000.0]
+      then balance
+      else error(codeOf(balance) + errorMessage)
+
+    def from(balance: Double): Either[InvalidBalance, Balance] =
+      if balance  > -1000.0 && balance < 1000000.0
+      then Right(balance)
+      else Left(InvalidBalance(balance + errorMessage))

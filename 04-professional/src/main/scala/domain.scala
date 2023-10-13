@@ -10,6 +10,7 @@ object domain:
 
 
   case class Account(accountHolder: AccountHolder,
-                     iban: IBAN // International Bank Account Number
+                     iban: IBAN, // International Bank Account Number
+                     balance: Balance
                     )
 

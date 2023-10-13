@@ -7,9 +7,9 @@ object Main:
 
     // Since the model is expecting opaque type,
     // we have to cast the underlying type to the opaque type
-    val firstName: FirstName = "John".asInstanceOf[FirstName]
-    val middleName: FirstName = "Stuart".asInstanceOf[FirstName]
-    val lastName: LastName = "Mill".asInstanceOf[LastName]
+    val firstName: Name = "John".asInstanceOf[Name]
+    val middleName: Name = "Stuart".asInstanceOf[Name]
+    val lastName: Name = "Mill".asInstanceOf[Name]
 
     val holder = AccountHolder(
       firstName,
@@ -20,7 +20,8 @@ object Main:
 
     // Example of IBAN from the United Kingdom
     val iban: IBAN = "GB33BUKB20201555555555".asInstanceOf[IBAN]
-    val account = Account(holder, iban)
+    val balance: Balance = -10.0.asInstanceOf[Balance]
+    val account = Account(holder, iban, balance)
 
     println(account)
   }
