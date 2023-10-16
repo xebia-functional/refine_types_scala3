@@ -127,7 +127,7 @@ Additional information in the [Scala 3 Documentation](https://docs.scala-lang.or
 [Source Code](./03-advanced/src/main/scala/dagmendez/advanced)
 
 So now that we have covered the basics, what happens in real applications? 
-Often times we will work with values that are unknown at running time. Hence, we want certain kind of validation.
+Often times we will work with values that are unknown at runtime. Hence, we want certain kind of validation.
 We can achieve this with a new method in the companion object called `from`:
 
 ```scala 3
@@ -178,7 +178,7 @@ And we will get a compiler error:
 [error] (advanced / Compile / compileIncremental) Compilation failed
 ```
 
-So now that we are using the two methods `apply` and `from`, we can validate known and unknown values during compilation and running time.
+So now that we are using the two methods `apply` and `from`, we can validate known and unknown values during compilation and runtime.
 But... the validation on the `apply` method was different from the one in the `from` method. Why?
 > An if-then-else expression whose condition is a constant expression can be simplified to the selected branch.
 > Prefixing an if-then-else expression with inline enforces that the condition has to be a constant expression, and thus guarantees that the conditional will always simplify.
