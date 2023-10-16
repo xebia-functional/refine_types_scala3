@@ -124,7 +124,69 @@ Additional information in the [Scala 3 Documentation](https://docs.scala-lang.or
 
 ## Advanced
 
+[Source Code](./03-advanced/src/main/scala/dagmendez/advanced)
 
+So now that we have covered the basics, what happens in real applications? 
+Often times we will work with values that are unknown at running time. Hence, we want certain kind of validation.
+We can achieve this with a new method in the companion object called `from`:
+
+```scala 3
+final case class InvalidName(message: String) extends RuntimeException(message) with NoStackTrace
+
+opaque type Name = String
+
+object Name:
+  
+  def from(fn: String): Either[InvalidName, Name] =
+  // Here we can access the underlying type API because it is evaluated during runtime.
+    if fn.isBlank | (fn.trim.length < fn.length)
+    then Left(InvalidName(s"First name is invalid with value <$fn>."))
+    else Right(fn)
+```
+
+What about those values that we know during compilation time? 
+Is there a way that the compiler could tell us that the values fail the validation?
+Yes, there is a way in Scala 3. 
+We will combine the soft keyword `inline` and the tools present in the package `scala.compiletime`.
+
+```scala 3
+inline def apply(name: String): Name =
+  inline if name == ""
+  then error(codeOf(name) + " is invalid.")
+  else name
+```
+Explanation: `inline` replaces the right hand side where the left hand side is called. 
+The `inline if` will evaluate the condition during compile time. If true, will rewrite the `apply` as:
+```scala 3
+inline def apply(name: String) = error(codeOf(name) + " is invalid.")
+```
+So if we try to write something like this:
+```scala 3
+private val firstName: Name  = Name("")
+```
+It will replace the right hand side of the def apply (because is also inlined) during compilation time to:
+```scala 3
+private val firstName: Name  = error(codeOf("") + " is invalid.")
+```
+And we will get a compiler error:
+```shell
+[error] -- Error: /opaque_types_and_inline/03-advanced/src/main/scala/dagmendez/advanced/Main.scala:12:39 
+[error] 12 |    private val firstName: Name  = Name("")
+[error]    |                                   ^^^^^^^^
+[error]    |                                   "" is invalid.
+[error] one error found
+[error] (advanced / Compile / compileIncremental) Compilation failed
+```
+
+So now that we are using the two methods `apply` and `from`, we can validate known and unknown values during compilation and running time.
+But... the validation on the `apply` method was different from the one in the `from` method. Why?
+> An if-then-else expression whose condition is a constant expression can be simplified to the selected branch.
+> Prefixing an if-then-else expression with inline enforces that the condition has to be a constant expression, and thus guarantees that the conditional will always simplify.
+
+The methods used in the `from` method are evaluated at runtime, so they cannot be reduced to a constant expression.
+If we try to compile the same validation in the `apply` method, the compiler won't allow us.
+
+Full documentation on inlining at [Scala 3 reference for metaprogramming](https://docs.scala-lang.org/scala3/reference/metaprogramming/inline.html#).
 
 ## Professional
 
