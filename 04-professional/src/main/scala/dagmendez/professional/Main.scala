@@ -59,21 +59,21 @@ object Main:
 
   private object UnhappyFrom:
     // Play with any field that would crash the validation and return Left
-    private val firstName  = Name.from("Juana")
-    private val middleName = Name.from("Manuela")
-    private val lastName   = Name.from("Herrero")
+    private val firstName      = Name.from("Juana")
+    private val middleName     = Name.from("Manuela")
+    private val lastName       = Name.from("Herrero")
     private val secondLastName = Name.from("Garcia")
-    private val iban       = IBAN.from("ES451234567890123456789012")
-    private val balance    = Balance.from(5000000.00) // Left
+    private val iban           = IBAN.from("ES451234567890123456789012")
+    private val balance        = Balance.from(5000000.00) // Left
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for
-        fn <- firstName
-        mn <- middleName
-        ln <- lastName
+        fn  <- firstName
+        mn  <- middleName
+        ln  <- lastName
         sln <- secondLastName
-        ib <- iban
-        ba <- balance
+        ib  <- iban
+        ba  <- balance
       yield Account(AccountHolder(fn, Some(mn), ln, Some(sln)), ib, ba)
 
     assert(account.isLeft)

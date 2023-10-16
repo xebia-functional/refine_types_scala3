@@ -1,6 +1,6 @@
 package dagmendez.naive
 
-import dagmendez.naive.opaqueTypes.*
+import dagmendez.naive.typeAliases.*
 
 object domain:
 

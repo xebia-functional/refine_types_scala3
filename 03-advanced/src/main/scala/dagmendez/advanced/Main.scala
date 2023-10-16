@@ -86,11 +86,7 @@ object Main:
         ln <- lastName
         ib <- iban
         bl <- balance
-      yield Account(
-        AccountHolder(
-          fn, Some(mn), ln, secondLastName = None
-        ), ib, bl
-      )
+      yield Account(AccountHolder(fn, Some(mn), ln, secondLastName = None), ib, bl)
 
     assert(account.isLeft)
     def print(): Unit = println(account)
