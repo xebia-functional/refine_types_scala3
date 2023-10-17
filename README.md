@@ -190,8 +190,153 @@ Full documentation on inlining at [Scala 3 reference for metaprogramming](https:
 
 ## Professional
 
+[Source Code](./04-professional/src/main/scala/dagmendez/professional)
 
+How to implement refined types that are robust and maintainable? 
+Well, first, the validation algorithm has to be robust and should be _the same_ for the `apply` and `from` methods.
+Second, the error messages should be as similar as possible so the errors during runtime can be easily identified.
 
-https://www.tbg5-finance.org/?ibandocs.shtml
+So let's go and check one by one or refined types.
 
-https://www.iban.com/structure
+### Balance
+
+The bank decides that for the given accounts that our service will handle, there is a maximum and minimum amount of money allowed.
+These limits are -1,000.00€ and 1,000,000.00€.
+In this specific case, the same validation could be used in the `apply` method since the expression in the `if` can be reduced
+to `true` or `false` during compilation time.
+We will declare an inline def that will take as parameter the balance and return a boolean.
+For this to work we need a boolean expression that can be evaluated at compile time.
+```scala 3
+private inline def validation(balance: Double): Boolean = balance >= -1000.0 && balance <= 1000000.0
+```
+So we have the same validation. Now, do we have the same error message? Yes!
+For it to work, we have to inline the error message, so it can be reduced to a single string during compilation time.
+```scala 3
+private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000.00 and equal or smaller than 1,000,000.00"
+```
+In the `apply` we used `codeOf()`, `error` and `+`:
+- `codeOf(x)` returns the value of the parameter `x`
+- `error(x)` prints the x string into the console as a compilation error message
+- `+` concatenates the value of the parameter `x` and the rest of the error messages (that has to be inlined to work!)
+```scala 3
+error(codeOf(balance) + errorMessage)
+```
+In the `from` method we just return the concatenation of the parameter and the error message wrapped into a specific error case class:
+```scala 3
+Left(InvalidBalance(balance + errorMessage))
+```
+The complete implementation would look like this:
+```scala 3
+object Balance:
+
+  private inline def validation(balance: Double): Boolean = balance >= -1000.0 && balance <= 1000000.0
+  private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000.00 and equal or smaller than 1,000,000.00"
+
+  inline def apply(balance: Double): Balance =
+    inline if validation(balance)
+    then balance
+    else error(codeOf(balance) + errorMessage)
+
+  def from(balance: Double): Either[InvalidBalance, Balance] =
+    if validation(balance)
+    then Right(balance)
+    else Left(InvalidBalance(balance + errorMessage))
+```
+
+### IBAN - International Bank Account Number
+
+[More info on IBAN](https://www.iban.com/structure)
+
+For the IBAN field, we will use the Spanish rule:
+- IBAN always starts with the country code "ES"
+- IBAN has a total length of 26 characters:
+  - 2 letters (country code)
+  - followed by 24 digits
+
+We know that the `apply` method we cannot use `substring` or `length` since they are evaluated at runtime.
+How can we do it? Here, Scala 3 has a very handy package that will help us a lot: `scala.compiletime.ops`:
+- [API docs](https://www.scala-lang.org/api/3.2.1/scala/compiletime/ops.html#)
+- [Reference documentation](https://docs.scala-lang.org/scala3/reference/metaprogramming/compiletime-ops.html)
+
+```scala 3
+inline def apply(iban: String): IBAN =
+  inline if constValue[
+    Substring[iban.type, 0, 2] == "ES" &&
+    Length[iban.type] == 26 &&
+    Matches[Substring[iban.type, 2, 25], "^\\d*$"]
+  ]
+  then iban
+  else error(codeOf(iban) + errorMessage)
+
+def from(iban: String): Either[InvalidIBAN, IBAN] =
+  if 
+    iban.substring(0, 2) == "ES" && 
+    iban.length == 26 &&
+    iban.substring(2, 25).matches("^\\d*$")
+  then Right(iban)
+  else Left(InvalidIBAN(iban + errorMessage))
+```
+
+The _real magic_ of inlining and the compile time API starts to show:
+- `constValue[T]`: returns the value of the type `T`. So, `T` in this case has to be of type `Boolean`.
+- `Substring[String, Int, Int]`: returns the value of the substring as a type `String`. 
+Here we use `iban.type` because we are working with types, but this call does not return `String` but the value itself as a refined type.
+```scala 3
+val iban: ES012345678901234567890123 = "ES012345678901234567890123"
+val condition: Boolean = Substring[iban.type, 0, 2] == "ES"
+val condition: Boolean = Substring[ES012345678901234567890123, 0, 2] == "ES"
+val condition: Boolean = ES == "ES"
+val condition: Boolean = "ES" == "ES" //ES is converted to its value
+val condition: Boolean = true
+```
+- `Length[String]`: returns the length of the string as an `Int`
+```scala 3
+val iban: ES012345678901234567890123 = "ES012345678901234567890123"
+val condition: Boolean = Length[iban.type] == 26
+val condition: Boolean = Length[ES012345678901234567890123] == 26
+val condition: Boolean = 26 == 26 //Type 26 is converted to its value
+val condition: Boolean = true
+```
+
+### Name
+
+Our final refined type will be `Name`. 
+In Spain is very usual for people to have multiple first names and, at the same time, people do not categorized any of these names as middle name. 
+Thus, our refinement has to be flexible while keeping some rules. So let's say that we want:
+- Names start with upper case followed by lower case
+- No empty spaces before or after the name
+- Name can contain multiple valid names separated by one white space
+
+To do this validation we can use a regular expression following the Java standards. 
+
+```scala 3
+object Name:
+
+  /**
+   * Explanation:
+   *
+   * `^` :Asserts the start of the string. [A-Z]: Matches an uppercase letter at the beginning of the string.
+   * [a-zA-Z]*: Matches zero or more letters (uppercase or lowercase) after the first letter.
+   * (?:\s[A-Z][a-zA-Z]*)*: Allows for zero or more occurrences of a space followed by an uppercase letter and zero or more lowercase/uppercase letters. $: Asserts the end of the string.
+   */
+  private inline val validation   = """^[A-Z][a-zA-Z]*(?:\s[A-Z][a-zA-Z]*)*$"""
+  private inline val errorMessage = " is invalid. It must: \n - be trimmed.\n - start with upper case.\n - follow upper case with lower case."
+
+  inline def apply(fn: String): Name =
+    inline if constValue[Matches[fn.type, validation.type]]
+    then fn
+    else error(codeOf(fn) + errorMessage)
+
+  def from(fn: String): Either[InvalidName, Name] =
+    if validation.r.matches(fn)
+    then Right(fn)
+    else Left(InvalidName(fn + errorMessage))
+```
+
+With this approach, we have a common error message and validation logic expressed in an elegant way in just a few lines of code.
+
+## Conclusion
+
+Leveraging the power of `opaque types`, `inline` and the compile time API, 
+we can define refined types in Scala 3 that are precise and elegant.
+There is no need to use any other library than the language itself. 
