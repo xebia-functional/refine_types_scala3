@@ -1,8 +1,9 @@
 package dagmendez.professional
 
+import scala.compiletime.ops.any.==
 import scala.compiletime.ops.boolean.&&
-import scala.compiletime.ops.double.{<, >}
-import scala.compiletime.ops.string.Matches
+import scala.compiletime.ops.double.{<=, >=}
+import scala.compiletime.ops.string.{Length, Matches, Substring}
 import scala.compiletime.{codeOf, constValue, error}
 
 import dagmendez.professional.error.*
@@ -12,11 +13,6 @@ object opaqueTypes:
   opaque type Name    = String
   opaque type IBAN    = String
   opaque type Balance = Double
-
-  /*
-   * We explore the power of inlining and the complementary methods of the package `scala.compiletime.ops`
-   *
-   * */
 
   object Name:
 
@@ -48,29 +44,33 @@ object opaqueTypes:
      * validate IBAN codes can be found here:
      *   - [[https://www.tbg5-finance.org/?ibandocs.shtml]].
      */
-    private inline val validation   = """^ES\d{24}$"""
     private inline val errorMessage = " is invalid. It must: \n - start with the country code ES.\n - follow the country code with 24 numbers."
 
     inline def apply(iban: String): IBAN =
-      inline if constValue[Matches[iban.type, validation.type]]
+      inline if constValue[
+          Substring[iban.type, 0, 2] == "ES" && Length[iban.type] == 26 && Matches[Substring[iban.type, 2, 25], "^\\d*$"]
+        ]
       then iban
       else error(codeOf(iban) + errorMessage)
 
     def from(iban: String): Either[InvalidIBAN, IBAN] =
-      if validation.r.matches(iban)
+      if iban.substring(0, 2) == "ES"
+        && iban.length == 26
+        && iban.substring(2, 25).matches("^\\d*$")
       then Right(iban)
       else Left(InvalidIBAN(iban + errorMessage))
 
   object Balance:
 
-    private inline val errorMessage = " is invalid. Balance should be greater than -1,000.00 and smaller than 1,000,000.00"
+    private inline def validation(balance: Double): Boolean = balance >= -1000.0 && balance <= 1000000.0
+    private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000.00 and equal or smaller than 1,000,000.00"
 
     inline def apply(balance: Double): Balance =
-      inline if constValue[balance.type > -1000.0 && balance.type < 1000000.0]
+      inline if validation(balance)
       then balance
       else error(codeOf(balance) + errorMessage)
 
     def from(balance: Double): Either[InvalidBalance, Balance] =
-      if balance > -1000.0 && balance < 1000000.0
+      if validation(balance)
       then Right(balance)
       else Left(InvalidBalance(balance + errorMessage))
