@@ -1,4 +1,4 @@
-package dagmendez.professional
+package dagmendez.magic
 
 import scala.compiletime.ops.any.==
 import scala.compiletime.ops.boolean.&&
@@ -6,7 +6,7 @@ import scala.compiletime.ops.double.{<=, >=}
 import scala.compiletime.ops.string.{Length, Matches, Substring}
 import scala.compiletime.{codeOf, constValue, error}
 
-import dagmendez.professional.error.*
+import dagmendez.magic.error.*
 
 object opaqueTypes:
 

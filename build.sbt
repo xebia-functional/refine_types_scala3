@@ -12,7 +12,7 @@ lazy val `opaque-types-and-inline`: Project =
       naive,
       standard,
       advanced,
-      professional
+
     )
 
 lazy val naive: Project =
@@ -33,12 +33,12 @@ lazy val advanced: Project =
     .settings(commonScalacOptions)
     .settings(name := "advanced")
 
-lazy val professional: Project =
+lazy val `scala-magic`: Project =
   project
-    .in(file("04-professional"))
+    .in(file("04-scala-magic"))
     .settings(commonScalacOptions)
     .settings(
-      name := "professional",
+      name := "scala-magic",
       libraryDependencies ++= Seq(
       )
     )

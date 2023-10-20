@@ -1,4 +1,4 @@
-package dagmendez.professional
+package dagmendez.magic
 
 import scala.util.control.NoStackTrace
 
