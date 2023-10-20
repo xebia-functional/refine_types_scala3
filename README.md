@@ -20,9 +20,9 @@ How can we model _better_ this domain? The primitive types do not help us much. 
 
 ## Basic
 
-[Source Code](./01-naive/src/main/scala/dagmendez/naive)
+[Source Code](./01-basic/src/main/scala/dagmendez/basic)
 
-The naive way will be to declare just some `type aliases` for the underlying types. It works the same in Scala 2. For example:
+The basic way will be to declare just some `type aliases` for the underlying types. It works the same in Scala 2. For example:
 ```scala 3
   type Name    = String
   type IBAN    = String // International Bank Account Number

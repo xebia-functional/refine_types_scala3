@@ -1,7 +1,7 @@
-package dagmendez.naive
+package dagmendez.basic
 
-import dagmendez.naive.domain.*
-import dagmendez.naive.typeAliases.*
+import dagmendez.basic.domain.*
+import dagmendez.basic.typeAliases.*
 
 object Main:
 

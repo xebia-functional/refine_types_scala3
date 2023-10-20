@@ -21,6 +21,12 @@ lazy val naive: Project =
     .settings(commonScalacOptions)
     .settings(name := "naive")
 
+lazy val basic: Project =
+  project
+    .in(file("01-basic"))
+    .settings(commonScalacOptions)
+    .settings(name := "basic")
+
 lazy val standard: Project =
   project
     .in(file("02-standard"))

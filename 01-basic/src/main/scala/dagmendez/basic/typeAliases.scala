@@ -1,4 +1,4 @@
-package dagmendez.naive
+package dagmendez.basic
 
 object typeAliases:
 
