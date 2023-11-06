@@ -188,7 +188,7 @@ So let's go and check one by one or refined types.
 ### Balance
 
 The bank decides that for the given accounts that our service will handle, there is a maximum and minimum amount of money allowed.
-These limits are -1,000.00€ and 1,000,000.00€.
+These limits are -1,000€ and 1,000,000€.
 In this specific case, the same validation could be used in the `apply` method since the expression in the `if` can be reduced
 to `true` or `false` during compilation time.
 We will declare an inline def that will take as parameter the balance and return a boolean.
