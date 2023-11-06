@@ -18,7 +18,7 @@ object Main:
 
   // Example of IBAN from the United Kingdom
   private val iban: IBAN       = "GB33BUKB20201555555555"
-  private val balance: Balance = -10.0
+  private val balance: Balance = -10
   private val account          = Account(holder, iban, balance)
 
   private def print(): Unit = println(account)

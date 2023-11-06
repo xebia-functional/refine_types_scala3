@@ -12,7 +12,7 @@ object opaqueTypes:
 
   opaque type Name    = String
   opaque type IBAN    = String
-  opaque type Balance = Double
+  opaque type Balance = Int
 
   object Name:
 
@@ -62,15 +62,15 @@ object opaqueTypes:
 
   object Balance:
 
-    private inline def validation(balance: Double): Boolean = balance >= -1000.0 && balance <= 1000000.0
-    private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000.00 and equal or smaller than 1,000,000.00"
+    private inline def validation(balance: Int): Boolean = balance >= -1000 && balance <= 1000000
+    private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000 and equal or smaller than 1,000,000"
 
-    inline def apply(balance: Double): Balance =
+    inline def apply(balance: Int): Balance =
       inline if validation(balance)
       then balance
       else error(codeOf(balance) + errorMessage)
 
-    def from(balance: Double): Either[InvalidBalance, Balance] =
+    def from(balance: Int): Either[InvalidBalance, Balance] =
       if validation(balance)
       then Right(balance)
       else Left(InvalidBalance(balance + errorMessage))

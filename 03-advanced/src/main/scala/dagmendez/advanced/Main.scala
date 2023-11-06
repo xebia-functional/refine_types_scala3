@@ -13,7 +13,7 @@ object Main:
     private val middleName: Name = Name("Stuart")
     private val lastName: Name   = Name("Mill")
     private val iban: IBAN       = IBAN("GB33BUKB20201555555555")
-    private val balance: Balance = Balance(-300.0)
+    private val balance: Balance = Balance(-300)
 
     private val account: Account =
       Account(
@@ -35,7 +35,7 @@ object Main:
     private val middleName: Name = Name("Stuart")
     private val lastName: Name   = Name("Mill")
     private val iban: IBAN       = IBAN("GB33BUKB20201555555555")
-    private val balance: Balance = Balance(-1000.0)
+    private val balance: Balance = Balance(-1000)
 
     private val account: Account =
       Account(
@@ -56,7 +56,7 @@ object Main:
     private val middleName: Either[InvalidName, Name]    = Name.from("Stuart")
     private val lastName: Either[InvalidName, Name]      = Name.from("Mill")
     private val iban: Either[InvalidIBAN, IBAN]          = IBAN.from("GB33BUKB20201555555555")
-    private val balance: Either[InvalidBalance, Balance] = Balance.from(0.0)
+    private val balance: Either[InvalidBalance, Balance] = Balance.from(0)
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for
@@ -74,10 +74,10 @@ object Main:
 
     // Play with any field that would crash the validation and return Left
     private val firstName: Either[InvalidName, Name]     = Name.from("John")
-    private val middleName: Either[InvalidName, Name]    = Name.from("Stuart ")  // This returns Left.
+    private val middleName: Either[InvalidName, Name]    = Name.from("Stuart ") // This returns Left.
     private val lastName: Either[InvalidName, Name]      = Name.from("Mill")
     private val iban: Either[InvalidIBAN, IBAN]          = IBAN.from("GB33BUKB20201555555555")
-    private val balance: Either[InvalidBalance, Balance] = Balance.from(-5000.0) // This returns Left.
+    private val balance: Either[InvalidBalance, Balance] = Balance.from(-5000)  // This returns Left.
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for

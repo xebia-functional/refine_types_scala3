@@ -12,7 +12,7 @@ object Main:
     private val middleName: Name = Name("Stuart T")
     private val lastName: Name   = Name("Mill")
     private val iban: IBAN       = IBAN("ES451234567890123456789012")
-    private val balance: Balance = Balance(123.45)
+    private val balance: Balance = Balance(123)
 
     private val account: Account = Account(
       AccountHolder(
@@ -36,14 +36,14 @@ object Main:
     private val iban: IBAN       = IBAN("ES451234567890123456789012") // Comment this one an uncomment next line
     // private val iban: IBAN = IBAN("ES4512345678901234567890") // Uncomment and won't compile
     // private val balance: Balance = Balance(-3000.0) // Won't compile
-    private val balance: Balance = Balance(-100.0) // Compiles
+    private val balance: Balance = Balance(-100) // Compiles
 
   private object HappyFrom:
     private val firstName  = Name.from("Juan")
     private val middleName = Name.from("Manuel")
     private val lastName   = Name.from("Herrero")
     private val iban       = IBAN.from("ES451234567890123456789012")
-    private val balance    = Balance.from(15.60)
+    private val balance    = Balance.from(15)
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for
@@ -64,7 +64,7 @@ object Main:
     private val lastName       = Name.from("Herrero")
     private val secondLastName = Name.from("Garcia")
     private val iban           = IBAN.from("ES451234567890123456789012")
-    private val balance        = Balance.from(5000000.00) // Left
+    private val balance        = Balance.from(5000000) // Left
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for

@@ -13,8 +13,10 @@ The use case is based on a very simplistic model for a financial institution.
 ```scala 3
 final case class AccountHolder(firstName: String, middleName: Option[String], lastName: String, secondLastName: Option[String])
 
-final case class Account(accountHolder: AccountHolder, iban: String, balance: Double)
+final case class Account(accountHolder: AccountHolder, iban: String, balance: Int)
 ```
+
+_**Disclaimer:** Use a more adequate type for the Balance in your production code. Do not use `Int`._
 
 How can we model _better_ this domain? The primitive types do not help us much. Let's dive into the Scala 3 type system.
 
@@ -26,7 +28,7 @@ The basic way will be to declare just some `type aliases` for the underlying typ
 ```scala 3
   type Name    = String
   type IBAN    = String // International Bank Account Number
-  type Balance = Double
+  type Balance = Int
 ```
 
 With these type aliases we could redefine our basic model to:
@@ -44,7 +46,7 @@ val firstName: Name  = "John"
 val middleName: Name = "Stuart"
 val lastName: Name   = "Mill"
 val iban: IBAN       = "GB33BUKB20201555555555"
-val balance: Balance = -10.0
+val balance: Balance = -10
 
 val holder = AccountHolder(firstName, Some(middleName), lastName, None)
 
@@ -68,7 +70,7 @@ This prevents us from accessing the API of the underlying primitive type and pus
 ```scala 3
 opaque type Name    = String
 opaque type IBAN    = String
-opaque type Balance = Double
+opaque type Balance = Int
 ```
 
 But, since the compiler does not see the underlying type... how do you create values of the `opaque type`? 
@@ -82,7 +84,7 @@ object IBAN:
   def apply(iban: String): IBAN = iban
 
 object Balance:
-  def apply(balance: Double): Balance = balance
+  def apply(balance: Int): Balance = balance
 ```
 
 For those unaware of the `opaque types`, this code could make them think that we are using there `case class`(es) as wrappers of other types.
@@ -92,7 +94,7 @@ val firstName: Name  = Name("John")
 val middleName: Name = Name("Stuart")
 val lastName: Name   = Name("Mill")
 val iban: IBAN       = IBAN("GB33BUKB20201555555555")
-val balance: Balance = Balance(123.45)
+val balance: Balance = Balance(123)
 
 val holder: AccountHolder = AccountHolder(firstName, Some(middleName), lastName, None)
 
@@ -192,12 +194,12 @@ to `true` or `false` during compilation time.
 We will declare an inline def that will take as parameter the balance and return a boolean.
 For this to work we need a boolean expression that can be evaluated at compile time.
 ```scala 3
-private inline def validation(balance: Double): Boolean = balance >= -1000.0 && balance <= 1000000.0
+private inline def validation(balance: Int): Boolean = balance >= -1000 && balance <= 1000000
 ```
 So we have the same validation. Now, do we have the same error message? Yes!
 For it to work, we have to inline the error message, so it can be reduced to a single string during compilation time.
 ```scala 3
-private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000.00 and equal or smaller than 1,000,000.00"
+private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000 and equal or smaller than 1,000,000"
 ```
 In the `apply` we used `codeOf()`, `error` and `+`:
 - `codeOf(x)` returns the value of the parameter `x`
@@ -214,15 +216,15 @@ The complete implementation would look like this:
 ```scala 3
 object Balance:
 
-  private inline def validation(balance: Double): Boolean = balance >= -1000.0 && balance <= 1000000.0
-  private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000.00 and equal or smaller than 1,000,000.00"
+  private inline def validation(balance: Int): Boolean = balance >= -1000 && balance <= 1000000
+  private inline val errorMessage = " is invalid. Balance should be equal or greater than -1,000 and equal or smaller than 1,000,000"
 
-  inline def apply(balance: Double): Balance =
+  inline def apply(balance: Int): Balance =
     inline if validation(balance)
     then balance
     else error(codeOf(balance) + errorMessage)
 
-  def from(balance: Double): Either[InvalidBalance, Balance] =
+  def from(balance: Int): Either[InvalidBalance, Balance] =
     if validation(balance)
     then Right(balance)
     else Left(InvalidBalance(balance + errorMessage))

@@ -4,7 +4,7 @@ object opaqueTypes:
 
   opaque type Name    = String
   opaque type IBAN    = String
-  opaque type Balance = Double
+  opaque type Balance = Int
 
   /*
    * Opaque types can have companion objects.
@@ -19,4 +19,4 @@ object opaqueTypes:
     def apply(iban: String): IBAN = iban
 
   object Balance:
-    def apply(balance: Double): Balance = balance
+    def apply(balance: Int): Balance = balance

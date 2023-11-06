@@ -8,7 +8,7 @@ object opaqueTypes:
 
   opaque type Name    = String
   opaque type IBAN    = String // International Bank Account Number
-  opaque type Balance = Double
+  opaque type Balance = Int
 
   /*
    * Validations on the apply method are restricted to those that can be evaluated at compile time.
@@ -46,12 +46,12 @@ object opaqueTypes:
 
   object Balance:
 
-    inline def apply(balance: Double): Balance =
-      inline if balance > 1000000.0 | balance < -1000.0
+    inline def apply(balance: Int): Balance =
+      inline if balance > 1000000 | balance < -1000
       then error(codeOf(balance) + " in invalid.")
       else balance
 
-    def from(balance: Double): Either[InvalidBalance, Balance] =
-      if balance > 1000000.0 | balance < -1000.0
+    def from(balance: Int): Either[InvalidBalance, Balance] =
+      if balance > 1000000 | balance < -1000
       then Left(InvalidBalance(s"First name is invalid with value <$balance>."))
       else Right(balance)

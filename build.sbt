@@ -11,8 +11,7 @@ lazy val `opaque-types-and-inline`: Project =
     .aggregate(
       naive,
       standard,
-      advanced,
-
+      advanced
     )
 
 lazy val naive: Project =

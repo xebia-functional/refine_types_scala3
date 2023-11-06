@@ -15,7 +15,7 @@ object Main:
   private val middleName: Name = Name("Stuart")
   private val lastName: Name   = Name("Mill")
   private val iban: IBAN       = IBAN("GB33BUKB20201555555555")
-  private val balance: Balance = Balance(123.45)
+  private val balance: Balance = Balance(123)
 
   private val holder: AccountHolder =
     AccountHolder(
