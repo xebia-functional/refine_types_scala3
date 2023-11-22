@@ -1,15 +1,14 @@
 package dagmendez.workshop.b
 
 import scala.compiletime.*
-import scala.compiletime.ops.string.*
 import scala.compiletime.ops.any.*
+import scala.compiletime.ops.string.*
 
 /**
- * IBAN:
- * We will refine an IBAN number for an Spanish account. Requirements:
- * - Length of 26
- * - First two characters are "ES"
- * - Remaining characters are digits
+ * IBAN: We will refine an IBAN number for an Spanish account. Requirements:
+ *   - Length of 26
+ *   - First two characters are "ES"
+ *   - Remaining characters are digits
  */
 object ApplyAndFrom:
 
@@ -20,16 +19,16 @@ object ApplyAndFrom:
     /**
      * The error messages have to be inlined so they can be used in the apply method.
      */
-    inline val invalidLengthErrorMessage = " is invalid. Length has to be 26."
+    inline val invalidLengthErrorMessage      = " is invalid. Length has to be 26."
     inline val invalidCountryCodeErrorMessage = " is invalid. Country code must be <ES>."
-    inline val invalidDigitsErrorMessage = " is invalid. Only numbers are accepted after the country code."
+    inline val invalidDigitsErrorMessage      = " is invalid. Only numbers are accepted after the country code."
 
     def from(iban: String): Either[String, IBAN] =
       if iban.length != 26
       then Left(iban + invalidLengthErrorMessage)
       else if iban.substring(0, 2) != "ES"
       then Left(iban + invalidCountryCodeErrorMessage)
-      else if !iban.substring(2,25).matches("^\\d*$")
+      else if !iban.substring(2, 25).matches("^\\d*$")
       then Left(iban + invalidDigitsErrorMessage)
       else Right(iban)
 
@@ -43,11 +42,10 @@ object ApplyAndFrom:
       else if !constValue[Matches[Substring[iban.type , 2, 25], "^\\d*$"]]
       then error(codeOf(iban) + invalidDigitsErrorMessage)
       else iban
-      */
-
+     */
 
     /**
-    Can we unify the validation values?
+     * Can we unify the validation values?
      */
 
   end IBAN
@@ -55,11 +53,11 @@ object ApplyAndFrom:
   @main def run(): Unit =
     Seq(
       IBAN.from("ES123456789012345678901234"), // Valid IBAN
-      IBAN.from("ES1234567890123456789"), // InvalidLength
+      IBAN.from("ES1234567890123456789"),      // InvalidLength
       IBAN.from("PT123456789012345678901234"), // InvalidCountry
-      IBAN.from("ES1234567890123456789012ES"), // InvalidNumber
-      //IBAN("ES123456789012345678901234"),
-      //IBAN("ES1234567890123456789"),
-      //IBAN("PT123456789012345678901234"),
-      //IBAN("ES1234567890123456789012ES"),
+      IBAN.from("ES1234567890123456789012ES")  // InvalidNumber
+      // IBAN("ES123456789012345678901234"),
+      // IBAN("ES1234567890123456789"),
+      // IBAN("PT123456789012345678901234"),
+      // IBAN("ES1234567890123456789012ES"),
     ).foreach(println)

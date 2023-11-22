@@ -45,12 +45,12 @@ lazy val `scala-magic`: Project =
     )
 
 lazy val `workshop`: Project = {
-  project.in(file("05-workshop"))
+  project
+    .in(file("05-workshop"))
     .settings(commonScalacOptions)
     .settings(
       name := "workshop",
       libraryDependencies ++= Seq(
-
       )
     )
 }

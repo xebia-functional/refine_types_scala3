@@ -19,7 +19,6 @@ object Presentation:
       else if age > 150 then Left("Person is too old (>150)")
       else Right(age)
 
-
   @main def run(): Unit =
     Seq(
       Presentation.Age.from(60),
@@ -30,10 +29,8 @@ object Presentation:
       // Presentation.Age(160),
     ).foreach(println)
 
-
   /**
    * Can we unify the error messages?
    */
 
 end Presentation
-
