@@ -9,16 +9,12 @@ lazy val `opaque-types-and-inline`: Project =
   project
     .in(file("."))
     .aggregate(
-      naive,
+      basic,
       standard,
-      advanced
+      advanced,
+      `scala-magic`,
+      workshop
     )
-
-lazy val naive: Project =
-  project
-    .in(file("01-naive"))
-    .settings(commonScalacOptions)
-    .settings(name := "naive")
 
 lazy val basic: Project =
   project
@@ -47,6 +43,17 @@ lazy val `scala-magic`: Project =
       libraryDependencies ++= Seq(
       )
     )
+
+lazy val `workshop`: Project = {
+  project.in(file("05-workshop"))
+    .settings(commonScalacOptions)
+    .settings(
+      name := "workshop",
+      libraryDependencies ++= Seq(
+
+      )
+    )
+}
 
 lazy val commonScalacOptions = Seq(
   Compile / console / scalacOptions --= Seq(
