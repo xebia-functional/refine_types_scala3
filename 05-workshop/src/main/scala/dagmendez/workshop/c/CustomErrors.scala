@@ -13,6 +13,8 @@ object CustomErrors:
 
   object IBAN:
 
+    // Task 1 is solved! ^_^
+    
     inline val lengthValidation          = 26
     inline val invalidLengthErrorMessage = " is invalid. Length has to be 26."
 
@@ -31,18 +33,17 @@ object CustomErrors:
       then error(codeOf(iban) + invalidDigitsErrorMessage)
       else iban
 
-    /*
-    We need to define an ADT for the errors and change the signature of the `from` method
-     */
+    // Task 2
 
+    // Solution task 2 - custom error
     /*
     enum IBANerror(val message: String):
       case InvalidLength(val value: String) extends IBANerror(value + invalidLengthErrorMessage)
       case InvalidCountry(val value: String) extends IBANerror(value + invalidCountryCodeErrorMessage)
-      case InvalidNumber(val value: String) extends IBANerror(value + invalidDigitsErrorMessage)
-     */
+      case InvalidDigit(val value: String) extends IBANerror(value + invalidDigitsErrorMessage)
+    */
 
-    def from[Error >: String](iban: String): Either[Error, IBAN] =
+    def from[Error](iban: String): Either[Error, IBAN] =
       if iban.length != lengthValidation
       then Left(???)
       else if iban.substring(0, 2) != countryCodeValidation
@@ -50,17 +51,53 @@ object CustomErrors:
       else if !iban.substring(2, 25).matches(digitValidation)
       then Left(???)
       else Right(iban)
-
+    
+    // Solution task 2 - def from
+    /*
+    def from(iban: String): Either[IBANerror, IBAN] =
+      if iban.length != lengthValidation
+      then Left(IBANerror.InvalidLength(iban))
+      else if iban.substring(0, 2) != countryCodeValidation
+      then Left(IBANerror.InvalidCountry(iban))
+      else if !iban.substring(2, 25).matches(digitValidation)
+      then Left(IBANerror.InvalidDigit(iban))
+      else Right(iban)
+     */
+    
   end IBAN
 
   @main def run(): Unit =
     Seq(
-      IBAN.from("ES123456789012345678901234"), // Valid IBAN
-      IBAN.from("ES1234567890123456789"),      // InvalidLength
-      IBAN.from("PT123456789012345678901234"), // InvalidCountry
-      IBAN.from("ES1234567890123456789012ES")  // InvalidNumber
-      // IBAN("ES123456789012345678901234"),
-      // IBAN("ES1234567890123456789"),
-      // IBAN("PT123456789012345678901234"),
-      // IBAN("ES1234567890123456789012ES"),
+       //IBAN.from("ES123456789012345678901234"), // Valid IBAN
+       //IBAN.from("ES1234567890123456789"),      // InvalidLength
+       //IBAN.from("ES1234567890123456789") match
+       //  case Left(value) => value.message
+       //  case Right(value) => value
+       //,      // InvalidLength error message
+       //IBAN.from("PT123456789012345678901234"), // InvalidCountry
+       //IBAN.from("PT123456789012345678901234") match
+       //  case Left(value) => value.message
+       //  case Right(value) => value
+       //, // InvalidCountry error message
+       //IBAN.from("ES1234567890123456789012ES"),  // InvalidNumber
+       //IBAN.from("ES1234567890123456789012ES") match
+       //  case Left(value) => value.message
+       //  case Right(value) => value
+       //,  // InvalidNumber error message
+       IBAN("ES123456789012345678901234")//,
+       //IBAN("ES1234567890123456789"),
+       //IBAN("PT123456789012345678901234"),
+       //IBAN("ES1234567890123456789012ES"),
     ).foreach(println)
+  
+  // Task 1
+  /**
+   * Can we replace the if/else/then with a match?
+   */
+  
+  // Task 2
+  /**
+   * Can we write our own API for safe constructors?
+   */
+
+end CustomErrors

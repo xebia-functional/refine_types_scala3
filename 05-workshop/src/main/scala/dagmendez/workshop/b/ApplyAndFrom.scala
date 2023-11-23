@@ -34,6 +34,7 @@ object ApplyAndFrom:
 
     inline def apply(iban: String): IBAN = ???
 
+    // Solution for apply
     /*
       inline if constValue[Length[iban.type] != 26]
       then error(codeOf(iban) + invalidLengthErrorMessage)
@@ -43,10 +44,7 @@ object ApplyAndFrom:
       then error(codeOf(iban) + invalidDigitsErrorMessage)
       else iban
      */
-
-    /**
-     * Can we unify the validation values?
-     */
+    
 
   end IBAN
 
@@ -61,3 +59,16 @@ object ApplyAndFrom:
       // IBAN("PT123456789012345678901234"),
       // IBAN("ES1234567890123456789012ES"),
     ).foreach(println)
+
+  // Task 1
+  /**
+   * Can we unify the validation values?
+   */
+  
+  // Task 2
+  /**
+   * Can we customize the error messages?
+   */
+  
+end ApplyAndFrom
+  
