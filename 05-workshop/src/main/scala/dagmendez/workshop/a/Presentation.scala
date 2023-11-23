@@ -24,8 +24,8 @@ object Presentation:
       Presentation.Age.from(60),
       Presentation.Age.from(-60),
       Presentation.Age.from(160),
-      Presentation.Age(60)//,
-      //Presentation.Age(-60),
+      Presentation.Age(60) // ,
+      // Presentation.Age(-60),
       // Presentation.Age(160),
     ).foreach(println)
 

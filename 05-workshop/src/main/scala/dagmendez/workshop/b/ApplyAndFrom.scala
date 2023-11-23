@@ -44,7 +44,6 @@ object ApplyAndFrom:
       then error(codeOf(iban) + invalidDigitsErrorMessage)
       else iban
      */
-    
 
   end IBAN
 
@@ -64,11 +63,10 @@ object ApplyAndFrom:
   /**
    * Can we unify the validation values?
    */
-  
+
   // Task 2
   /**
    * Can we customize the error messages?
    */
-  
+
 end ApplyAndFrom
-  

@@ -38,7 +38,7 @@ object FromApi:
         case country if constValue[Substring[country.type, 0, 2] != countryCodeValidation.type] => error(codeOf(iban) + invalidCountryCodeErrorMessage)
         case digit if !constValue[Matches[Substring[digit.type, 2, 25], digitValidation.type]] => error(codeOf(iban) + invalidDigitsErrorMessage)
         case _ => iban
-    */
+     */
 
     enum IBANerror(val message: String):
       case InvalidLength(val value: String)  extends IBANerror(value + invalidLengthErrorMessage)
@@ -46,10 +46,10 @@ object FromApi:
       case InvalidNumber(val value: String)  extends IBANerror(value + invalidDigitsErrorMessage)
 
     def from(iban: String): IBAN | IBANerror = iban match
-      case length if iban.length != lengthValidation => IBANerror.InvalidLength(length)
+      case length if iban.length != lengthValidation                => IBANerror.InvalidLength(length)
       case country if iban.substring(0, 2) != countryCodeValidation => IBANerror.InvalidCountry(country)
       case digit if !iban.substring(2, 25).matches(digitValidation) => IBANerror.InvalidNumber(digit)
-      case validIban => validIban
+      case validIban                                                => validIban
 
     /* Task 2
      * Implement a `from` API:
@@ -74,7 +74,7 @@ object FromApi:
     def fromOpt(iban: String): Option[IBAN] = from(iban) match
       case validIban: IBAN => Some(validIban)
       case _: IBANerror => None
-    */
+     */
 
     def fromT(iban: String): Try[IBAN] = ???
 
@@ -83,7 +83,7 @@ object FromApi:
     def fromT(iban: String): Try[IBAN] = from(iban) match
       case validIban: IBAN => Success(validIban)
       case invalidIban: IBANerror => Failure(new Throwable(invalidIban.message))
-    */
+     */
   end IBAN
 
   @main def run(): Unit =
@@ -92,20 +92,20 @@ object FromApi:
       IBAN.from("ES123456789012345678901234"), // IBAN
       IBAN.from("ES1234567890123456789"),      // InvalidLength
       IBAN.from("PT123456789012345678901234"), // InvalidCountry
-      IBAN.from("ES1234567890123456789012ES"), // InvalidNumber
-      //"\n def fromE()",
-      //IBAN.fromE("ES123456789012345678901234"), // Right(IBAN)
-      //IBAN.fromE("ES1234567890123456789"),      // Left(InvalidLength)
-      //IBAN.fromE("PT123456789012345678901234"), // Left(InvalidCountry)
-      //IBAN.fromE("ES1234567890123456789012ES"), // Left(InvalidNumber)
-      //"\n def fromOpt()",
-      //IBAN.fromOpt("ES123456789012345678901234"), // Some(IBAN)
-      //IBAN.fromOpt("ES1234567890123456789"),      // None
-      //IBAN.fromOpt("PT123456789012345678901234"), // None
-      //IBAN.fromOpt("ES1234567890123456789012ES"), // None
-      //"\n def fromT()",
-      //IBAN.fromT("ES123456789012345678901234"), // Success
-      //IBAN.fromT("ES1234567890123456789"),      // Failure
-      //IBAN.fromT("PT123456789012345678901234"), // Failure
-      //IBAN.fromT("ES1234567890123456789012ES")  // Failure
+      IBAN.from("ES1234567890123456789012ES")  // InvalidNumber
+      // "\n def fromE()",
+      // IBAN.fromE("ES123456789012345678901234"), // Right(IBAN)
+      // IBAN.fromE("ES1234567890123456789"),      // Left(InvalidLength)
+      // IBAN.fromE("PT123456789012345678901234"), // Left(InvalidCountry)
+      // IBAN.fromE("ES1234567890123456789012ES"), // Left(InvalidNumber)
+      // "\n def fromOpt()",
+      // IBAN.fromOpt("ES123456789012345678901234"), // Some(IBAN)
+      // IBAN.fromOpt("ES1234567890123456789"),      // None
+      // IBAN.fromOpt("PT123456789012345678901234"), // None
+      // IBAN.fromOpt("ES1234567890123456789012ES"), // None
+      // "\n def fromT()",
+      // IBAN.fromT("ES123456789012345678901234"), // Success
+      // IBAN.fromT("ES1234567890123456789"),      // Failure
+      // IBAN.fromT("PT123456789012345678901234"), // Failure
+      // IBAN.fromT("ES1234567890123456789012ES")  // Failure
     ).foreach(println)
