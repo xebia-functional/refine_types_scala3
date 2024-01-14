@@ -43,7 +43,7 @@ object CustomErrors:
       case InvalidDigit(val value: String) extends IBANerror(value + invalidDigitsErrorMessage)
      */
 
-    def from[Error](iban: String): Either[Error, IBAN] =
+    def either[Error](iban: String): Either[Error, IBAN] =
       if iban.length != lengthValidation
       then Left(???)
       else if iban.substring(0, 2) != countryCodeValidation
@@ -54,7 +54,7 @@ object CustomErrors:
 
     // Solution task 2 - def from
     /*
-    def from(iban: String): Either[IBANerror, IBAN] =
+    def either(iban: String): Either[IBANerror, IBAN] =
       if iban.length != lengthValidation
       then Left(IBANerror.InvalidLength(iban))
       else if iban.substring(0, 2) != countryCodeValidation
@@ -68,19 +68,19 @@ object CustomErrors:
 
   @main def run(): Unit =
     Seq(
-      // IBAN.from("ES123456789012345678901234"), // Valid IBAN
-      // IBAN.from("ES1234567890123456789"),      // InvalidLength
-      // IBAN.from("ES1234567890123456789") match
+      // IBAN.either("ES123456789012345678901234"), // Valid IBAN
+      // IBAN.either("ES1234567890123456789"),      // InvalidLength
+      // IBAN.either("ES1234567890123456789") match
       //  case Left(value) => value.message
       //  case Right(value) => value
       // ,      // InvalidLength error message
-      // IBAN.from("PT123456789012345678901234"), // InvalidCountry
-      // IBAN.from("PT123456789012345678901234") match
+      // IBAN.either("PT123456789012345678901234"), // InvalidCountry
+      // IBAN.either("PT123456789012345678901234") match
       //  case Left(value) => value.message
       //  case Right(value) => value
       // , // InvalidCountry error message
-      // IBAN.from("ES1234567890123456789012ES"),  // InvalidNumber
-      // IBAN.from("ES1234567890123456789012ES") match
+      // IBAN.either("ES1234567890123456789012ES"),  // InvalidNumber
+      // IBAN.either("ES1234567890123456789012ES") match
       //  case Left(value) => value.message
       //  case Right(value) => value
       // ,  // InvalidNumber error message

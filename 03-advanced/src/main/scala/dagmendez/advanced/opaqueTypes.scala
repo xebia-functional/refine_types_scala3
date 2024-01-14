@@ -26,7 +26,7 @@ object opaqueTypes:
       then error(codeOf(name) + " is invalid.")
       else name
 
-    def from(fn: String): Either[InvalidName, Name] =
+    def either(fn: String): Either[InvalidName, Name] =
       // Here we can access the underlying type API because it is evaluated during runtime.
       if fn.isBlank | (fn.trim.length < fn.length)
       then Left(InvalidName(s"First name is invalid with value <$fn>."))
@@ -39,7 +39,7 @@ object opaqueTypes:
       then error(codeOf(iban) + " in invalid.")
       else iban
 
-    def from(iban: String): Either[InvalidIBAN, IBAN] =
+    def either(iban: String): Either[InvalidIBAN, IBAN] =
       if iban.isBlank | iban.contains(" ")
       then Left(InvalidIBAN(s"First name is invalid with value <$iban>."))
       else Right(iban)
@@ -51,7 +51,7 @@ object opaqueTypes:
       then error(codeOf(balance) + " in invalid.")
       else balance
 
-    def from(balance: Int): Either[InvalidBalance, Balance] =
+    def either(balance: Int): Either[InvalidBalance, Balance] =
       if balance > 1000000 | balance < -1000
       then Left(InvalidBalance(s"First name is invalid with value <$balance>."))
       else Right(balance)

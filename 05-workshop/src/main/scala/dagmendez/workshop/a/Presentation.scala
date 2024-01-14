@@ -14,16 +14,16 @@ object Presentation:
       else if constValue[age.type > 150] then error(codeOf(age) + " illegal age. Age should be not greater than 150")
       else age
 
-    def from(age: Int): Either[String, Age] =
+    def either(age: Int): Either[String, Age] =
       if age < 0 then Left("Person cannot have negative age")
       else if age > 150 then Left("Person is too old (>150)")
       else Right(age)
 
   @main def run(): Unit =
     Seq(
-      Presentation.Age.from(60),
-      Presentation.Age.from(-60),
-      Presentation.Age.from(160),
+      Presentation.Age.either(60),
+      Presentation.Age.either(-60),
+      Presentation.Age.either(160),
       Presentation.Age(60) // ,
       // Presentation.Age(-60),
       // Presentation.Age(160),

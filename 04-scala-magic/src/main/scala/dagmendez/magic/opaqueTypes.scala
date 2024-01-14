@@ -31,7 +31,7 @@ object opaqueTypes:
       then fn
       else error(codeOf(fn) + errorMessage)
 
-    def from(fn: String): Either[InvalidName, Name] =
+    def either(fn: String): Either[InvalidName, Name] =
       if validation.r.matches(fn)
       then Right(fn)
       else Left(InvalidName(fn + errorMessage))
@@ -53,7 +53,7 @@ object opaqueTypes:
       then iban
       else error(codeOf(iban) + errorMessage)
 
-    def from(iban: String): Either[InvalidIBAN, IBAN] =
+    def either(iban: String): Either[InvalidIBAN, IBAN] =
       if iban.substring(0, 2) == "ES"
         && iban.length == 26
         && iban.substring(2, 25).matches("^\\d*$")
@@ -70,7 +70,7 @@ object opaqueTypes:
       then balance
       else error(codeOf(balance) + errorMessage)
 
-    def from(balance: Int): Either[InvalidBalance, Balance] =
+    def either(balance: Int): Either[InvalidBalance, Balance] =
       if validation(balance)
       then Right(balance)
       else Left(InvalidBalance(balance + errorMessage))

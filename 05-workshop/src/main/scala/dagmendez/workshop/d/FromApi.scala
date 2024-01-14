@@ -3,7 +3,6 @@ package dagmendez.workshop.d
 import scala.compiletime.*
 import scala.compiletime.ops.any.*
 import scala.compiletime.ops.string.*
-import scala.util.{Failure, Success, Try}
 
 object FromApi:
 
@@ -41,9 +40,9 @@ object FromApi:
      */
 
     enum IBANerror(val message: String):
-      case InvalidLength(val value: String)  extends IBANerror(value + invalidLengthErrorMessage)
-      case InvalidCountry(val value: String) extends IBANerror(value + invalidCountryCodeErrorMessage)
-      case InvalidNumber(val value: String)  extends IBANerror(value + invalidDigitsErrorMessage)
+      case InvalidLength(value: String)  extends IBANerror(value + invalidLengthErrorMessage)
+      case InvalidCountry(value: String) extends IBANerror(value + invalidCountryCodeErrorMessage)
+      case InvalidNumber(value: String)  extends IBANerror(value + invalidDigitsErrorMessage)
 
     def from(iban: String): IBAN | IBANerror = iban match
       case length if iban.length != lengthValidation                => IBANerror.InvalidLength(length)
@@ -53,37 +52,28 @@ object FromApi:
 
     /* Task 2
      * Implement a `from` API:
-     *   - def fromE: Either[String, IBAN] //compatible with various codec libraries
-     *   - def fromOpt: Option[IBAN]
-     *   -def fromT: Try[IBAN]
+     *   - def either: Either[String, IBAN] //compatible with various codec libraries
+     *   - def option: Option[IBAN]
      */
 
-    def fromE(iban: String): Either[String, IBAN] = ???
+    def either(iban: String): Either[String, IBAN] = ???
 
     // Solution fromE
     /*
-    def fromE(iban: String): Either[String, IBAN] = from(iban) match
+    def either(iban: String): Either[String, IBAN] = from(iban) match
       case validIban: IBAN => Right(validIban)
       case invalidIban: IBANerror => Left(invalidIban.message)
      */
 
-    def fromOpt(iban: String): Option[IBAN] = ???
+    def option(iban: String): Option[IBAN] = ???
 
     // Solution fromOpt
     /*
-    def fromOpt(iban: String): Option[IBAN] = from(iban) match
+    def option(iban: String): Option[IBAN] = from(iban) match
       case validIban: IBAN => Some(validIban)
       case _: IBANerror => None
      */
 
-    def fromT(iban: String): Try[IBAN] = ???
-
-    // Solution fromT
-    /*
-    def fromT(iban: String): Try[IBAN] = from(iban) match
-      case validIban: IBAN => Success(validIban)
-      case invalidIban: IBANerror => Failure(new Throwable(invalidIban.message))
-     */
   end IBAN
 
   @main def run(): Unit =
@@ -93,19 +83,14 @@ object FromApi:
       IBAN.from("ES1234567890123456789"),      // InvalidLength
       IBAN.from("PT123456789012345678901234"), // InvalidCountry
       IBAN.from("ES1234567890123456789012ES")  // InvalidNumber
-      // "\n def fromE()",
-      // IBAN.fromE("ES123456789012345678901234"), // Right(IBAN)
-      // IBAN.fromE("ES1234567890123456789"),      // Left(InvalidLength)
-      // IBAN.fromE("PT123456789012345678901234"), // Left(InvalidCountry)
-      // IBAN.fromE("ES1234567890123456789012ES"), // Left(InvalidNumber)
-      // "\n def fromOpt()",
-      // IBAN.fromOpt("ES123456789012345678901234"), // Some(IBAN)
-      // IBAN.fromOpt("ES1234567890123456789"),      // None
-      // IBAN.fromOpt("PT123456789012345678901234"), // None
-      // IBAN.fromOpt("ES1234567890123456789012ES"), // None
-      // "\n def fromT()",
-      // IBAN.fromT("ES123456789012345678901234"), // Success
-      // IBAN.fromT("ES1234567890123456789"),      // Failure
-      // IBAN.fromT("PT123456789012345678901234"), // Failure
-      // IBAN.fromT("ES1234567890123456789012ES")  // Failure
+      // "\n def either()",
+      // IBAN.either("ES123456789012345678901234"), // Right(IBAN)
+      // IBAN.either("ES1234567890123456789"),      // Left(InvalidLength)
+      // IBAN.either("PT123456789012345678901234"), // Left(InvalidCountry)
+      // IBAN.either("ES1234567890123456789012ES"), // Left(InvalidNumber)
+      // "\n def option()",
+      // IBAN.option("ES123456789012345678901234"), // Some(IBAN)
+      // IBAN.option("ES1234567890123456789"),      // None
+      // IBAN.option("PT123456789012345678901234"), // None
+      // IBAN.option("ES1234567890123456789012ES"), // None
     ).foreach(println)

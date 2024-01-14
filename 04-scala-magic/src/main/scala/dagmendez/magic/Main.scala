@@ -30,7 +30,7 @@ object Main:
   private object UnhappyApply:
 
     private val firstName: Name = Name("Jose") // Comment this one an uncomment next line
-    // private val firstName: FirstName = FirstName("") // Uncomment and won't compile
+    // private val firstName: Name = Name("") // Uncomment and won't compile
     private val middleName: Name = Name("Maria")
     private val lastName: Name   = Name("Garcia")
     private val iban: IBAN       = IBAN("ES451234567890123456789012") // Comment this one an uncomment next line
@@ -39,11 +39,11 @@ object Main:
     private val balance: Balance = Balance(-100) // Compiles
 
   private object HappyFrom:
-    private val firstName  = Name.from("Juan")
-    private val middleName = Name.from("Manuel")
-    private val lastName   = Name.from("Herrero")
-    private val iban       = IBAN.from("ES451234567890123456789012")
-    private val balance    = Balance.from(15)
+    private val firstName  = Name.either("Juan")
+    private val middleName = Name.either("Manuel")
+    private val lastName   = Name.either("Herrero")
+    private val iban       = IBAN.either("ES451234567890123456789012")
+    private val balance    = Balance.either(15)
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for
@@ -59,12 +59,12 @@ object Main:
 
   private object UnhappyFrom:
     // Play with any field that would crash the validation and return Left
-    private val firstName      = Name.from("Juana")
-    private val middleName     = Name.from("Manuela")
-    private val lastName       = Name.from("Herrero")
-    private val secondLastName = Name.from("Garcia")
-    private val iban           = IBAN.from("ES451234567890123456789012")
-    private val balance        = Balance.from(5000000) // Left
+    private val firstName      = Name.either("Juana")
+    private val middleName     = Name.either("Manuela")
+    private val lastName       = Name.either("Herrero")
+    private val secondLastName = Name.either("Garcia")
+    private val iban           = IBAN.either("ES451234567890123456789012")
+    private val balance        = Balance.either(5000000) // Left
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for

@@ -23,7 +23,7 @@ object ApplyAndFrom:
     inline val invalidCountryCodeErrorMessage = " is invalid. Country code must be <ES>."
     inline val invalidDigitsErrorMessage      = " is invalid. Only numbers are accepted after the country code."
 
-    def from(iban: String): Either[String, IBAN] =
+    def either(iban: String): Either[String, IBAN] =
       if iban.length != 26
       then Left(iban + invalidLengthErrorMessage)
       else if iban.substring(0, 2) != "ES"
@@ -49,10 +49,10 @@ object ApplyAndFrom:
 
   @main def run(): Unit =
     Seq(
-      IBAN.from("ES123456789012345678901234"), // Valid IBAN
-      IBAN.from("ES1234567890123456789"),      // InvalidLength
-      IBAN.from("PT123456789012345678901234"), // InvalidCountry
-      IBAN.from("ES1234567890123456789012ES")  // InvalidNumber
+      IBAN.either("ES123456789012345678901234"), // Valid IBAN
+      IBAN.either("ES1234567890123456789"),      // InvalidLength
+      IBAN.either("PT123456789012345678901234"), // InvalidCountry
+      IBAN.either("ES1234567890123456789012ES")  // InvalidNumber
       // IBAN("ES123456789012345678901234"),
       // IBAN("ES1234567890123456789"),
       // IBAN("PT123456789012345678901234"),
