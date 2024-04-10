@@ -46,7 +46,7 @@ lazy val `scala-magic`: Project =
 
 lazy val `workshop`: Project = {
   project
-    .in(file("05-workshop"))
+    .in(file("06-workshop"))
     .settings(commonScalacOptions)
     .settings(
       name := "workshop",

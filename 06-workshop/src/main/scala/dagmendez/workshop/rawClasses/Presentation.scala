@@ -1,4 +1,4 @@
-package dagmendez.workshop.a
+package dagmendez.workshop.rawClasses
 
 import scala.compiletime.*
 import scala.compiletime.ops.int.*
