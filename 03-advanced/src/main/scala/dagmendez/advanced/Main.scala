@@ -31,7 +31,7 @@ object Main:
 
   private object UnhappyApply:
     private val firstName: Name = Name("John") // Comment this one an uncomment next line
-    // private val firstName: FirstName = FirstName("") // Uncomment and won't compile
+    // private val firstName: Name = Name("") // Uncomment and won't compile
     private val middleName: Name = Name("Stuart")
     private val lastName: Name   = Name("Mill")
     private val iban: IBAN       = IBAN("GB33BUKB20201555555555")
@@ -52,11 +52,11 @@ object Main:
     def print(): Unit = println(account)
 
   private object HappyFrom:
-    private val firstName: Either[InvalidName, Name]     = Name.from("John")
-    private val middleName: Either[InvalidName, Name]    = Name.from("Stuart")
-    private val lastName: Either[InvalidName, Name]      = Name.from("Mill")
-    private val iban: Either[InvalidIBAN, IBAN]          = IBAN.from("GB33BUKB20201555555555")
-    private val balance: Either[InvalidBalance, Balance] = Balance.from(0)
+    private val firstName: Either[InvalidName, Name]     = Name.either("John")
+    private val middleName: Either[InvalidName, Name]    = Name.either("Stuart")
+    private val lastName: Either[InvalidName, Name]      = Name.either("Mill")
+    private val iban: Either[InvalidIBAN, IBAN]          = IBAN.either("GB33BUKB20201555555555")
+    private val balance: Either[InvalidBalance, Balance] = Balance.either(0)
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for
@@ -73,11 +73,11 @@ object Main:
   private object UnhappyFrom:
 
     // Play with any field that would crash the validation and return Left
-    private val firstName: Either[InvalidName, Name]     = Name.from("John")
-    private val middleName: Either[InvalidName, Name]    = Name.from("Stuart ") // This returns Left.
-    private val lastName: Either[InvalidName, Name]      = Name.from("Mill")
-    private val iban: Either[InvalidIBAN, IBAN]          = IBAN.from("GB33BUKB20201555555555")
-    private val balance: Either[InvalidBalance, Balance] = Balance.from(-5000)  // This returns Left.
+    private val firstName: Either[InvalidName, Name]     = Name.either("John")
+    private val middleName: Either[InvalidName, Name]    = Name.either("Stuart ") // This returns Left.
+    private val lastName: Either[InvalidName, Name]      = Name.either("Mill")
+    private val iban: Either[InvalidIBAN, IBAN]          = IBAN.either("GB33BUKB20201555555555")
+    private val balance: Either[InvalidBalance, Balance] = Balance.either(-5000)  // This returns Left.
 
     private val account: Either[RuntimeException with NoStackTrace, Account] =
       for
