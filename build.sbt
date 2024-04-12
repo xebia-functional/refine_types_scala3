@@ -1,6 +1,6 @@
 ThisBuild / organization := "dagmendez"
 
-ThisBuild / scalaVersion := "3.3.1"
+ThisBuild / scalaVersion := "3.3.3"
 
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
@@ -63,6 +63,7 @@ lazy val presentation: Project = {
     .settings(
       name := "presentation",
       libraryDependencies ++= Seq(
+        "io.github.iltotore" %% "iron" % "2.5.0"
       )
     )
 }
