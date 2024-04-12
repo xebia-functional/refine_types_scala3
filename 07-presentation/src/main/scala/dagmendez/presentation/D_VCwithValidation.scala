@@ -1,6 +1,6 @@
 package dagmendez.presentation
 
-object C_VCwithValidation extends App:
+object D_VCwithValidation:
   
   val controlChars = Set('T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E')
 
@@ -15,13 +15,15 @@ object C_VCwithValidation extends App:
     def value: String = s"${numero.number}-${letra.character}"
 
 
-  List[Any](
+  val dnis = Vector[DNI]( 
     // Insuficientes números
-    DNI(DniNumber("0"), DniControlChar('A')).value,
+    DNI(DniNumber("0"), DniControlChar('A')),
     // Letras en los números
-    DNI(DniNumber("123BCD78"), DniControlChar('A')).value,
+    DNI(DniNumber("123BCD78"), DniControlChar('A')),
     // Letra de control inválida
-    DNI(DniNumber("12345678"), DniControlChar('Y')).value,
+    DNI(DniNumber("12345678"), DniControlChar('Y')),
     // Todas las validaciones son correctas
-    DNI(DniNumber("12345678"), DniControlChar('A')).value,
-  ).foreach(println)
+    DNI(DniNumber("12345678"), DniControlChar('A')),
+  )
+  
+  @main def printDNIs: Unit = dnis.map(_.value).foreach(println)
