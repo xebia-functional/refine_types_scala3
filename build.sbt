@@ -13,7 +13,8 @@ lazy val `opaque-types-and-inline`: Project =
       standard,
       advanced,
       `scala-magic`,
-      workshop
+      workshop,
+      presentation
     )
 
 lazy val basic: Project =
@@ -50,6 +51,17 @@ lazy val `workshop`: Project = {
     .settings(commonScalacOptions)
     .settings(
       name := "workshop",
+      libraryDependencies ++= Seq(
+      )
+    )
+}
+
+lazy val presentation: Project = {
+  project
+    .in(file("07-presentation"))
+    .settings(commonScalacOptions)
+    .settings(
+      name := "presentation",
       libraryDependencies ++= Seq(
       )
     )
