@@ -2,7 +2,7 @@ package dagmendez.presentation
 
 import scala.util.control.NoStackTrace
 
-object D_VCwithErrorHandling extends App:
+object E_VCwithErrorHandling:
   
   val controlChars = Set('T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E')
 
@@ -43,7 +43,12 @@ object D_VCwithErrorHandling extends App:
       dniChar <- DniControlChar.parse('f')
     yield DNI(dniNumber, dniChar)
 
-  List[Any](
-    validDNI.map(_.value),
-    invalidDNI.map(_.value)
-  ).foreach(println)
+  @main def printEitherDNIs(): Unit = 
+    Vector(validDNI, invalidDNI)
+      .map: either => 
+        either.map: dni => 
+          dni.value
+      .foreach(println)
+    
+    // Equivalente
+    Vector(validDNI, invalidDNI).map(_.map(_.value)).foreach(println)
