@@ -1,20 +1,20 @@
-package dagmendez.workshop
+package dagmendez.presentation
 
 import scala.util.control.NoStackTrace
 
-object VCwithErrorHandling extends App:
+object D_VCwithErrorHandling extends App:
   
   val controlChars = Set('T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E')
 
   case class FormatError(reason: String) extends Exception(reason) with NoStackTrace
 
-  case class DniNumber(number: Int)
+  case class DniNumber(number: String)
   object DniNumber:
-    def parse(number: Int): Either[FormatError, DniNumber] =
+    def parse(number: String): Either[FormatError, DniNumber] =
       Either.cond(
-        number.toString.length == 8,
+        number.length == 8 && number.forall(_.isDigit),
         DniNumber(number),
-        FormatError("El número ha de contener 8 cifras")
+        FormatError("El número ha de contener 8 carácteres numéricos")
       )
 
 
@@ -32,14 +32,14 @@ object VCwithErrorHandling extends App:
 
   val validDNI =
     for
-      dniNumber <- DniNumber.parse(12345678)
+      dniNumber <- DniNumber.parse("12345678")
       dniChar <- DniControlChar.parse('A')
     yield DNI(dniNumber, dniChar)
 
 
   val invalidDNI =
     for
-      dniNumber <- DniNumber.parse(0)
+      dniNumber <- DniNumber.parse("0")
       dniChar <- DniControlChar.parse('f')
     yield DNI(dniNumber, dniChar)
 
