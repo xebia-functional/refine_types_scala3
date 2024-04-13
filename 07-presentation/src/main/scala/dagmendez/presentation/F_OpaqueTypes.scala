@@ -18,8 +18,7 @@ object F_OpaqueTypes:
         DniNumber(number),
         FormatError("El número ha de contener 8 carácteres numéricos")
       )
-  extension (dniNumber: DniNumber)
-    inline def value: String = dniNumber
+  extension (dniNumber: DniNumber) inline def value: String = dniNumber
 
   opaque type DniControlChar = Char
 
@@ -32,8 +31,7 @@ object F_OpaqueTypes:
         FormatError("La letra de control es incorrecta")
       )
 
-  extension (dniChar: DniControlChar)
-    inline def value: Char = dniChar
+  extension (dniChar: DniControlChar) inline def value: Char = dniChar
 
   case class DNI(numero: DniNumber, letra: DniControlChar):
     def value: String = s"${numero.value}-${letra.value}"
@@ -41,17 +39,16 @@ object F_OpaqueTypes:
   val validDNI =
     for
       dniNumber <- DniNumber.parse("12345678")
-      dniChar <- DniControlChar.parse('A')
+      dniChar   <- DniControlChar.parse('A')
     yield DNI(dniNumber, dniChar)
-
 
   val invalidDNI =
     for
       dniNumber <- DniNumber.parse("0")
-      dniChar <- DniControlChar.parse('f')
+      dniChar   <- DniControlChar.parse('f')
     yield DNI(dniNumber, dniChar)
-  
-  @main def run: Unit = 
+
+  @main def run: Unit =
     Vector(validDNI, invalidDNI)
       .map(_.map(_.value))
       .foreach(println)
