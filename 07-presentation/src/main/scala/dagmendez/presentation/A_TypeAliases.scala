@@ -1,21 +1,30 @@
 package dagmendez.presentation
 
-object A_TypeAliases extends App:
+object A_TypeAliases:
 
   type DniNumber      = String
-  type DniControlChar = Char
+  type DniControlChar = String
 
-  case class DNI(numero: DniNumber, letra: DniControlChar):
-    def value: String = s"$numero-$letra"
+  class DNI private (number: DniNumber, letter: DniControlChar):
+    require(letter == controlDigit(number.toInt % 23))
+    def value: String = s"$number-$letter"
+  end DNI
+      
+  object DNI:
+    def fromString(dni: String): DNI =
+      val dniValues: Array[DniNumber] = dni.split("-")
+      val number: DniNumber = dniValues.head
+      val letter: DniControlChar = dniValues(1)
+      DNI(number, letter)
+  end DNI
+  
+  @main def A_TypeAliases_Run: Unit = 
+    Vector(
+      DNI.fromString("00000001-R"),
+      DNI.fromString("0000-001-R") // Will cause program to crash
+    ).map(_.value).foreach(println)
 
-  // Valid data
-  val validDniNumber: DniNumber = "12345678"
-  val validControlChar: Char    = 'A'
-  val validDNI                  = DNI(validDniNumber, validControlChar)
-
-  // Invalid Data
-  val invalidDniNumber: DniNumber = "Hola, ¿qué tal?"
-  val invalidControlChar: Char    = '3'
-  val invalidDNI                  = DNI(invalidDniNumber, invalidControlChar)
-
-  Vector(validDNI, invalidDNI).map(_.value).foreach(println)
+  /**
+   * Conclusion:
+   * Type Aliases increases code readability but do not give as any additional guaranties 
+   */
