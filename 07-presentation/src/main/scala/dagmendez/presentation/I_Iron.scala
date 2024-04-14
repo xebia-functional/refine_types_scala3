@@ -20,7 +20,7 @@ object I_Iron:
     def value: String = s"${numero.toString}-${letra.toString}"
 
   object DNI:
-   
+
     def parse(dni: String): Either[String, DNI] =
       dni.split("-") match
         case Array(notDash) =>
