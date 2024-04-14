@@ -2,22 +2,26 @@ package dagmendez.presentation
 
 object C_ValueClasses:
 
-  case class DniNumber(number: String)       extends AnyVal
-  case class DniControlChar(character: Char) extends AnyVal
+  class DniNumber(val number: String):
+    override def toString: String = number
+  end DniNumber
 
-  case class DNI(numero: DniNumber, letra: DniControlChar):
-    def value: String = s"${numero.number}-${letra.character}"
+  class DniLetter(val letter: String):
+    override def toString: String = letter
+  end DniLetter
 
-  val dnis = Vector[DNI](
-    DNI(DniNumber("12345678"), DniControlChar('A')),
-    DNI(DniNumber("0"), DniControlChar('f')),
-    DNI(DniNumber("Hola"), DniControlChar('0'))
-  )
+  class DNI(number: DniNumber, letter: DniLetter):
+    // Additional nesting to access the wrapped values
+    require(letter.letter == controlDigit(number.number.toInt % 23))
+    override def toString: String = s"$number-$letter"
+  end DNI
 
-  @main def printDNI(): Unit =
-    // Python-ish way if writing lambda functions, but with a line break
-    dnis
-      .map: dni =>
-        dni.value
-      .foreach: dniValue =>
-        println(dniValue)
+  def main(args: Array[String]): Unit =
+    Vector(
+      DNI(DniNumber("Hello"), DniLetter("42")), // Will cause program to crash
+      DNI(DniNumber("00000001"), DniLetter("R"))
+    ).map(_.toString).foreach(println)
+
+/**
+ * Conclusion: Value Classes give us some enforcement of order but not much more.
+ */

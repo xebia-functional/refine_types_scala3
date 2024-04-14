@@ -20,7 +20,7 @@ object B_TypeAliases:
 
   def main(args: Array[DniNumber]): Unit =
     Vector(
-      DNI.fromString("0000-001-R"), // Will cause program to crash
+      DNI.fromString("R-0000001"), // Will cause program to crash
       DNI.fromString("00000001-R")
     ).foreach(println)
 
