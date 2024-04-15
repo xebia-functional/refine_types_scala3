@@ -4,8 +4,6 @@ import scala.util.control.NoStackTrace
 
 object F_OpaqueTypes:
 
-  val controlChars = Set('T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E')
-
   case class FormatError(reason: String) extends Exception(reason) with NoStackTrace
 
   opaque type DniNumber = String
@@ -16,39 +14,51 @@ object F_OpaqueTypes:
       Either.cond(
         number.length == 8 && number.forall(_.isDigit),
         DniNumber(number),
-        FormatError("El número ha de contener 8 carácteres numéricos")
+        FormatError("The leading 8 characters must be digits.")
       )
-  extension (dniNumber: DniNumber) inline def value: String = dniNumber
+  end DniNumber
 
-  opaque type DniControlChar = Char
+  opaque type DniLetter = String
 
-  object DniControlChar:
-    inline def apply(char: Char): DniControlChar = char
-    def parse(character: Char): Either[FormatError, DniControlChar] =
+  object DniLetter:
+    inline def apply(letter: String): DniLetter = letter
+    def parse(letter: String): Either[FormatError, DniLetter] =
       Either.cond(
-        controlChars.contains(character),
-        DniControlChar(character),
-        FormatError("La letra de control es incorrecta")
+        controlDigit.values.toVector.contains(letter),
+        DniLetter(letter),
+        FormatError("Invalid control letter.")
       )
+  end DniLetter
 
-  extension (dniChar: DniControlChar) inline def value: Char = dniChar
+  extension (dniValue: DniNumber | DniLetter) inline def value: String = dniValue
 
-  case class DNI(numero: DniNumber, letra: DniControlChar):
-    def value: String = s"${numero.value}-${letra.value}"
+  case class DNI(numero: DniNumber, letra: DniLetter)
+  object DNI:
+    def parse(number: Either[FormatError, DniNumber], letter: Either[FormatError, DniLetter]): Either[FormatError, DNI] =
+      for
+        n <- number
+        l <- letter
+        dni <- Either.cond(
+                 l.value == controlDigit(n.value.toInt % 23),
+                 DNI(n, l),
+                 FormatError("Verify the DNI. Control letter does not match the number.")
+               )
+      yield dni
+  end DNI
 
-  val validDNI =
-    for
-      dniNumber <- DniNumber.parse("12345678")
-      dniChar   <- DniControlChar.parse('A')
-    yield DNI(dniNumber, dniChar)
-
-  val invalidDNI =
-    for
-      dniNumber <- DniNumber.parse("0")
-      dniChar   <- DniControlChar.parse('f')
-    yield DNI(dniNumber, dniChar)
-
-  @main def run: Unit =
-    Vector(validDNI, invalidDNI)
-      .map(_.map(_.value))
-      .foreach(println)
+  def main(args: Array[String]): Unit =
+    Vector(
+      // FormatError: Verify the DNI. Control letter does not match the number.
+      DNI.parse(DniNumber.parse("00000001"), DniLetter.parse("A")),
+      // FormatError: The leading 8 characters must be digits.
+      DNI.parse(DniNumber.parse("R"), DniLetter.parse("00000001")),
+      // FormatError: The leading 8 characters must be digits.
+      DNI.parse(DniNumber.parse("123BCD78"), DniLetter.parse("A")),
+      // FormatError: Invalid control letter.
+      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("U")),
+      // FormatError: Verify the DNI. Control letter does not match the number.
+      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("B")),
+      // Valid DNIs
+      DNI.parse(DniNumber.parse("00000001"), DniLetter.parse("R")),
+      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("Z"))
+    ).foreach(println)
