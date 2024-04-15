@@ -6,7 +6,7 @@ import scala.compiletime.ops.string.{Length, Matches}
 import scala.compiletime.{constValue, error}
 import scala.util.control.NoStackTrace
 
-object G_OTwithCompileError:
+object G_OpaqueTypesWithCompileError:
 
   case class FormatError(reason: String) extends Exception(reason) with NoStackTrace
 

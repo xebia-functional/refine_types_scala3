@@ -32,7 +32,7 @@ object F_OpaqueTypes:
 
   extension (dniValue: DniNumber | DniLetter) inline def value: String = dniValue
 
-  case class DNI(numero: DniNumber, letra: DniLetter)
+  case class DNI(number: DniNumber, letter: DniLetter)
   object DNI:
     def parse(number: Either[FormatError, DniNumber], letter: Either[FormatError, DniLetter]): Either[FormatError, DNI] =
       for
