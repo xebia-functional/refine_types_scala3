@@ -1,7 +1,7 @@
 package dagmendez.presentation
 
 import scala.compiletime.ops.any.{==, ToString}
-import scala.compiletime.ops.boolean.&&
+import scala.compiletime.ops.int.<
 import scala.compiletime.ops.string.{Length, Matches}
 import scala.compiletime.{constValue, error}
 import scala.util.control.NoStackTrace
@@ -10,34 +10,51 @@ object G_OpaqueTypesWithCompileError:
 
   case class FormatError(reason: String) extends Exception(reason) with NoStackTrace
 
-  opaque type DniNumber = String
+  opaque type DniNumber = Int
 
   object DniNumber:
-    inline def apply(number: String): DniNumber =
-      inline if constValue[&&[Length[number.type] == 8, Matches[number.type, "[0-9]*"]]]
+    inline def apply(number: Int): DniNumber =
+      inline if constValue[<[Length[ToString[number.type]], 9]]
       then number
-      else error("El número ha de contener 8 caracteres numéricos")
+      else error("Maximum amount of numbers is 8.")
+  extension (number: DniNumber) inline def value: Int = number
 
-  extension (dniNumber: DniNumber) inline def value: String = dniNumber
+  opaque type DniLetter = String
 
-  opaque type DniControlChar = Char
+  object DniLetter:
+    inline def apply(letter: String): DniLetter =
+      inline if constValue[Matches[ToString[letter.type], "[ABCDEFGHJKLMNPQRSTWXYZ]{1}"]]
+      then letter
+      else error("Invalid control letter.")
 
-  object DniControlChar:
-    inline def apply(char: Char): DniControlChar =
-      inline if constValue[Matches[ToString[char.type], "[ABCDEFGHJKLMNPQRSTWXYZ]{1}"]]
-      then char
-      else error("Letra de control no válida")
+  extension (letter: DniLetter) inline def value: String = letter
 
-  extension (dniChar: DniControlChar) inline def value: Char = dniChar
+  case class DNI(number: DniNumber, letter: DniLetter):
+    def value: String =
+      val formatLeadingZeros = String.format("%08d", number.value)
+      s"$formatLeadingZeros-$letter"
+  object DNI:
+    def parse(number: DniNumber, letter: DniLetter): Either[FormatError, DNI] =
+      Either.cond(
+        letter.value == controlDigit(number.value % 23),
+        DNI(number, letter),
+        FormatError("Verify the DNI. Control letter does not match the number.")
+      )
+  end DNI
 
-  case class DNI(numero: DniNumber, letra: DniControlChar):
-    def value: String = s"${numero.value}-${letra.value}"
-
-  @main def compileRun: Unit =
+  def main(args: Array[String]): Unit =
     Vector(
-      // Error de compilación en número
-      // DNI(DniNumber("12345"), DniControlChar('A')),
-      // Error compilación en letra de control
-      // DNI(DniNumber("12345678"), DniControlChar('d')),
-      DNI(DniNumber("12345678"), DniControlChar('D'))
-    ).map(_.value).foreach(println)
+      // FormatError: Verify the DNI. Control letter does not match the number.
+      DNI.parse(DniNumber(1), DniLetter("A")),
+      // Won't compile due to type checking
+      // DNI.parse(DniNumber("R"), DniLetter("00000001")),
+      // compile error: Maximum amount of numbers is 8.
+      // DNI.parse(DniNumber(123456789), DniLetter("A")),
+      // compile error: Invalid control letter.
+      // DNI.parse(DniNumber(12345678), DniLetter("U")),
+      // FormatError: Verify the DNI. Control letter does not match the number.
+      DNI.parse(DniNumber(12345678), DniLetter("B")),
+      // Valid DNIs
+      DNI.parse(DniNumber(1), DniLetter("R")),
+      DNI.parse(DniNumber(12345678), DniLetter("Z"))
+    ).map(either => either.map(dni => dni.value)).foreach(println)
