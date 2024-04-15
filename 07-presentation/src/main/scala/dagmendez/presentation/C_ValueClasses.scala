@@ -18,7 +18,11 @@ object C_ValueClasses:
 
   def main(args: Array[String]): Unit =
     Vector(
-      DNI(DniNumber("Hello"), DniLetter("42")), // Will cause program to crash
+      // requirement failed: Verify the DNI. Control letter does not match the number.
+      DNI(DniNumber("00000001"), DniLetter("A")),
+      // java.lang.NumberFormatException: For input string: "R"
+      DNI(DniNumber("R"), DniLetter("00000001")),
+      // Valid DNI
       DNI(DniNumber("00000001"), DniLetter("R"))
     ).map(_.toString).foreach(println)
 
