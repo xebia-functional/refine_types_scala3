@@ -11,19 +11,16 @@ object C_ValueClasses:
   end DniLetter
 
   class DNI(number: DniNumber, letter: DniLetter):
-    // Additional nesting to access the wrapped values
-    require(letter.letter == controlDigit(number.number.toInt % 23))
     override def toString: String = s"$number-$letter"
-  end DNI
+
 
   def main(args: Array[String]): Unit =
     Vector(
-      // requirement failed: Verify the DNI. Control letter does not match the number.
-      DNI(DniNumber("00000001"), DniLetter("A")),
-      // java.lang.NumberFormatException: For input string: "R"
-      DNI(DniNumber("R"), DniLetter("00000001")),
       // Valid DNI
-      DNI(DniNumber("00000001"), DniLetter("R"))
+      DNI(DniNumber("00000001"), DniLetter("R")),
+      // Invalid DNIs
+      DNI(DniNumber("00000001"), DniLetter("A")),
+      DNI(DniNumber("R"), DniLetter("00000001"))
     ).map(_.toString).foreach(println)
 
 /**

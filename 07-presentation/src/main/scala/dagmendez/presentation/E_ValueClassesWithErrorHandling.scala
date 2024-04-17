@@ -1,10 +1,6 @@
 package dagmendez.presentation
 
-import scala.util.control.NoStackTrace
-
 object E_ValueClassesWithErrorHandling:
-
-  case class FormatError(reason: String) extends Exception(reason) with NoStackTrace
 
   case class DniNumber(number: String)
   object DniNumber:
@@ -42,6 +38,10 @@ object E_ValueClassesWithErrorHandling:
 
   def main(args: Array[String]): Unit =
     Vector(
+      // Valid DNIs
+      DNI.parse(DniNumber.parse("00000001"), DniLetter.parse("R")),
+      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("Z")),
+      // Invalid DNIs
       // FormatError: Verify the DNI. Control letter does not match the number.
       DNI.parse(DniNumber.parse("00000001"), DniLetter.parse("A")),
       // FormatError: The leading 8 characters must be digits.
@@ -51,8 +51,5 @@ object E_ValueClassesWithErrorHandling:
       // FormatError: Invalid control letter.
       DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("U")),
       // FormatError: Verify the DNI. Control letter does not match the number.
-      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("B")),
-      // Valid DNIs
-      DNI.parse(DniNumber.parse("00000001"), DniLetter.parse("R")),
-      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("Z"))
+      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("B"))
     ).foreach(println)

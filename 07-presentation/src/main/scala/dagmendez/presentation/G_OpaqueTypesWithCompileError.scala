@@ -4,11 +4,8 @@ import scala.compiletime.ops.any.{==, ToString}
 import scala.compiletime.ops.int.<
 import scala.compiletime.ops.string.{Length, Matches}
 import scala.compiletime.{constValue, error}
-import scala.util.control.NoStackTrace
 
 object G_OpaqueTypesWithCompileError:
-
-  case class FormatError(reason: String) extends Exception(reason) with NoStackTrace
 
   opaque type DniNumber = Int
 
@@ -23,7 +20,7 @@ object G_OpaqueTypesWithCompileError:
 
   object DniLetter:
     inline def apply(letter: String): DniLetter =
-      inline if constValue[Matches[ToString[letter.type], "[ABCDEFGHJKLMNPQRSTWXYZ]{1}"]]
+      inline if constValue[Matches[ToString[letter.type], "[ABCDEFGHJKLMNPQRSTVWXYZ]{1}"]]
       then letter
       else error("Invalid control letter.")
 
@@ -44,17 +41,15 @@ object G_OpaqueTypesWithCompileError:
 
   def main(args: Array[String]): Unit =
     Vector(
-      // FormatError: Verify the DNI. Control letter does not match the number.
-      DNI.parse(DniNumber(1), DniLetter("A")),
-      // Won't compile due to type checking
-      // DNI.parse(DniNumber("R"), DniLetter("00000001")),
-      // compile error: Maximum amount of numbers is 8.
-      // DNI.parse(DniNumber(123456789), DniLetter("A")),
-      // compile error: Invalid control letter.
-      // DNI.parse(DniNumber(12345678), DniLetter("U")),
-      // FormatError: Verify the DNI. Control letter does not match the number.
-      DNI.parse(DniNumber(12345678), DniLetter("B")),
       // Valid DNIs
       DNI.parse(DniNumber(1), DniLetter("R")),
-      DNI.parse(DniNumber(12345678), DniLetter("Z"))
+      DNI.parse(DniNumber(12345678), DniLetter("Z")),
+      // Invalid DNIs  
+      // FormatError: Verify the DNI. Control letter does not match the number.
+      DNI.parse(DniNumber(1), DniLetter("A")),
+      DNI.parse(DniNumber(12345678), DniLetter("B")),
+      // Invalid DNIs that will not compile, thus commented
+      // DNI.parse(DniNumber("R"), DniLetter("00000001"))
+      // DNI.parse(DniNumber(123456789), DniLetter("A"))
+      // DNI.parse(DniNumber(12345678), DniLetter("U"))
     ).map(either => either.map(dni => dni.value)).foreach(println)

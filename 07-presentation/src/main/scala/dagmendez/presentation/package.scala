@@ -1,5 +1,7 @@
 package dagmendez
 
+import scala.util.control.NoStackTrace
+
 package object presentation:
   val controlDigit: Map[Int, String] = Map(
     0  -> "T",
@@ -26,3 +28,5 @@ package object presentation:
     21 -> "K",
     22 -> "E"
   )
+
+  case class FormatError(reason: String) extends Exception(reason) with NoStackTrace
