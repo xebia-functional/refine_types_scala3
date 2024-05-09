@@ -2,26 +2,28 @@ package dagmendez.presentation
 
 object C_ValueClasses:
 
-  class DniNumber(val number: String):
-    override def toString: String = number
-  end DniNumber
+  class Number(val value: Int)
 
-  class DniLetter(val letter: String):
-    override def toString: String = letter
-  end DniLetter
+  class Letter(val value: String)
 
-  class DNI(number: DniNumber, letter: DniLetter):
-    override def toString: String = s"$number-$letter"
-
+  class DNI(number: Number, letter: Letter):
+    override def toString: String =
+      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
+      val readableDni             = numberWithLeadingZeroes.concat("-").concat(letter.value)
+      readableDni
+    end toString
 
   def main(args: Array[String]): Unit =
-    Vector(
-      // Valid DNI
-      DNI(DniNumber("00000001"), DniLetter("R")),
-      // Invalid DNIs
-      DNI(DniNumber("00000001"), DniLetter("A")),
-      DNI(DniNumber("R"), DniLetter("00000001"))
-    ).map(_.toString).foreach(println)
+    println("== Valid DNIs ==")
+    println(DNI(Number(1), Letter("R")))
+
+    println("== Invalid DNIs ==")
+    println(" * Negative Number:")
+    println(DNI(Number(-1), Letter("R")))
+    println(" * Too long number:")
+    println(DNI(Number(1234567890), Letter("R")))
+    println(" * Incorrect control letter:")
+    println(DNI(Number(1), Letter("Ñ")))
 
 /**
  * Conclusion: Value Classes give us some enforcement of order but not much more.

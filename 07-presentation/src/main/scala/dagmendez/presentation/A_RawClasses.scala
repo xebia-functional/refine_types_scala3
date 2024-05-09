@@ -2,14 +2,25 @@ package dagmendez.presentation
 
 object A_RawClasses:
 
-  class DNI(number: String, letter: String):
-    override def toString: String = s"$number-$letter"
+  class DNI(number: Int, letter: String):
+
+    override def toString: String =
+      val numberWithLeadingZeroes = addLeadingZeroes(number)
+      val readableDni             = numberWithLeadingZeroes.concat("-").concat(letter)
+      readableDni
+    end toString
+
+  end DNI
 
   def main(args: Array[String]): Unit =
-    Vector(
-      // Valid DNI
-      DNI("00000001", "R"),
-      // Invalid DNIs
-      DNI("00000001", "A"),
-      DNI("R", "00000001")
-    ).foreach(dni => println(dni))
+
+    println("== Valid DNIs ==")
+    println(DNI(1, "R"))
+
+    println("== Invalid DNIs ==")
+    println(" * Negative Number:")
+    println(DNI(-1, "R"))
+    println(" * Too long number:")
+    println(DNI(1234567890, "R"))
+    println(" * Incorrect control letter:")
+    println(DNI(1, "Ñ"))

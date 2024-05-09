@@ -29,4 +29,15 @@ package object presentation:
     22 -> "E"
   )
 
+  /**
+   * Takes the number, casts it to String and prepends as many zeroes (0) as needed until the length is 8.
+   * @param number
+   *   input number
+   * @tparam N
+   *   any type that is a sub-type of Int or an Int
+   * @return
+   *   a String of length 8
+   */
+  def addLeadingZeroes[N <: Int](number: N): String = String.format("%08d", number.asInstanceOf[Int])
+
   case class FormatError(reason: String) extends Exception(reason) with NoStackTrace

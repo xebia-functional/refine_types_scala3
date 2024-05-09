@@ -1,48 +1,80 @@
 package dagmendez.presentation
 
-import io.github.iltotore.iron.constraint.any.DescribedAs
-import io.github.iltotore.iron.constraint.numeric.{Positive, LessEqual}
-import io.github.iltotore.iron.constraint.any.In
+
+import io.github.iltotore.iron.constraint.any.{DescribedAs, In}
+import io.github.iltotore.iron.constraint.numeric.{LessEqual, Positive}
 import io.github.iltotore.iron.{:|, RefinedTypeOps, autoRefine}
-import scala.util.control.NoStackTrace
 object H_Iron:
 
-  opaque type ValidNumber = Positive & LessEqual[99999999] DescribedAs "Maximum amount of numbers is 8."
-  opaque type DniNumber   = Int :| ValidNumber
-  object DniNumber extends RefinedTypeOps[Int, ValidNumber, DniNumber]
-  extension (number: DniNumber) inline def value: Int = number
+  opaque type PositiveNumber = Positive DescribedAs "Number has to be positive"
+  opaque type NotTooLongNumber = LessEqual[99999999] DescribedAs "Maximum amount of numbers is 8"
+  opaque type ValidNumber = PositiveNumber & NotTooLongNumber
+  opaque type Number   = Int :| ValidNumber
+  object Number extends RefinedTypeOps[Int, ValidNumber, Number]
+  extension (number: Number) inline def value: Int = number
 
   opaque type ValidLetter =
     In[("A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z")] DescribedAs
       "Invalid control letter."
-  opaque type DniLetter = String :| ValidLetter
-  object DniLetter extends RefinedTypeOps[String, ValidLetter, DniLetter]
-  extension (letter: DniLetter) inline def value: String = letter
+  opaque type Letter = String :| ValidLetter
+  object Letter extends RefinedTypeOps[String, ValidLetter, Letter]
+  extension (letter: Letter) inline def value: String = letter
 
-  case class DNI(number: DniNumber, letter: DniLetter):
-    def value: String =
-      val formatLeadingZeros = String.format("%08d", number.value)
-      s"$formatLeadingZeros-$letter"
+  class DNI(number: Number, letter: Letter):
+    override def toString: String =
+      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
+      val readableDni = numberWithLeadingZeroes.concat("-").concat(letter.value)
+      readableDni
+    end toString
+  end DNI
 
   object DNI:
-    def parse(number: DniNumber, letter: DniLetter): Either[FormatError, DNI] =
-      Either.cond(
-        letter.value == controlDigit(number.value % 23),
-        DNI(number, letter),
-        FormatError("Verify the DNI. Control letter does not match the number.")
-      )
+    def parse(
+               possibleNumber: Either[String, Number],
+               possibleLetter: Either[String, Letter]
+             ): Either[String, DNI] =
+      for
+        number <- possibleNumber
+        letter <- possibleLetter
+        dni <- Either.cond(
+          letter.value == controlDigit(number.value % 23),
+          new DNI(number, letter),
+          "Control letter does not match the number."
+        )
+      yield dni
   end DNI
 
   def main(args: Array[String]): Unit =
-    Vector(
-      // Valid DNIs
-      DNI.parse(DniNumber(1), DniLetter("R")),
-      DNI.parse(DniNumber(12345678), DniLetter("Z")),
-      // FormatError: Verify the DNI. Control letter does not match the number.
-      DNI.parse(DniNumber(1), DniLetter("A")),
-      DNI.parse(DniNumber(12345678), DniLetter("B")),
-      // Invalid DNIs that will not compile, thus commented
-      // DNI.parse(DniNumber("R"), DniLetter("00000001"))
-      // DNI.parse(DniNumber(123456789), DniLetter("A"))
-      // DNI.parse(DniNumber(12345678), DniLetter("U"))
-    ).map(either => either.map(dni => dni.value)).foreach(println)
+    println("=== Compile time Validation ===")
+    println("== Valid DNIs ==")
+    println(DNI(Number(1), Letter("R")))
+    println(DNI(Number(12345678), Letter("Z")))
+
+    println("== Invalid DNIs ==")
+    println(" * Control letter does not match the number:")
+    println(DNI(Number(1), Letter("A")))
+    println(DNI(Number(12345678), Letter("B")))
+
+    // Compile time errors. If you uncomment this cases, the code won't compile
+    // Negative Number:
+    //println(DNI.parse(Number(-1), Letter("R")))
+    // Too long number:"
+    //println(DNI.parse(Number(1234567890), Letter("R")))
+    // Incorrect control letter:
+    //println(DNI.parse(Number(12345678), Letter("Ñ")))
+
+    println("=== Run time Validation ===")
+    println("== Valid DNIs ==")
+    println(DNI.parse(Number.either(1), Letter.either("R")))
+    println(DNI.parse(Number.either(12345678), Letter.either("Z")))
+
+    println("== Invalid DNIs ==")
+    println(" * Negative Number:")
+    println(DNI.parse(Number.either(-1), Letter.either("R")))
+    println(" * Too long number:")
+    println(DNI.parse(Number.either(1234567890), Letter.either("R")))
+    println(" * Incorrect control letter:")
+    println(DNI.parse(Number.either(12345678), Letter.either("Ñ")))
+    println(" * Control letter does not match the number:")
+    println(DNI.parse(Number.either(1), Letter.either("A")))
+    println(DNI.parse(Number.either(12345678), Letter.either("B")))

@@ -2,54 +2,63 @@ package dagmendez.presentation
 
 object E_ValueClassesWithErrorHandling:
 
-  case class DniNumber(number: String)
-  object DniNumber:
-    def parse(number: String): Either[FormatError, DniNumber] =
+  class Number private (val value: Int)
+  object Number:
+    def parse(number: Int): Either[FormatError, Number] =
       Either.cond(
-        number.length == 8 && number.forall(_.isDigit),
-        DniNumber(number),
-        FormatError("The leading 8 characters must be digits.")
+        number > 0 && number <= 99999999,
+        new Number(number),
+        if number <= 0 then FormatError("Number has to be positive.")
+        else FormatError("Maximum amount of numbers is 8.")
       )
-  end DniNumber
+  end Number
 
-  case class DniLetter(letter: String)
-  object DniLetter:
-    def parse(letter: String): Either[FormatError, DniLetter] =
+  class Letter private (val value: String)
+  object Letter:
+    def parse(letter: String): Either[FormatError, Letter] =
       Either.cond(
-        controlDigit.values.toVector.contains(letter),
-        DniLetter(letter),
+        controlDigit.values.exists(_controlDigit => letter == _controlDigit),
+        new Letter(letter),
         FormatError("Invalid control letter.")
       )
-  end DniLetter
+  end Letter
 
-  case class DNI(number: DniNumber, letter: DniLetter)
+  class DNI private (number: Number, letter: Letter):
+    override def toString: String =
+      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
+      val readableDni = numberWithLeadingZeroes.concat("-").concat(letter.value)
+      readableDni
+    end toString
+  end DNI
+
   object DNI:
-    def parse(number: Either[FormatError, DniNumber], letter: Either[FormatError, DniLetter]): Either[FormatError, DNI] =
+    def parse(
+               possibleNumber: Either[FormatError, Number],
+               possibleLetter: Either[FormatError, Letter]
+             ): Either[FormatError, DNI] =
       for
-        n <- number
-        l <- letter
+        number <- possibleNumber
+        letter <- possibleLetter
         dni <- Either.cond(
-                 l.letter == controlDigit(n.number.toInt % 23),
-                 DNI(n, l),
-                 FormatError("Verify the DNI. Control letter does not match the number.")
+                 letter.value == controlDigit(number.value % 23),
+                 new DNI(number, letter),
+                 FormatError("Control letter does not match the number.")
                )
       yield dni
   end DNI
 
   def main(args: Array[String]): Unit =
-    Vector(
-      // Valid DNIs
-      DNI.parse(DniNumber.parse("00000001"), DniLetter.parse("R")),
-      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("Z")),
-      // Invalid DNIs
-      // FormatError: Verify the DNI. Control letter does not match the number.
-      DNI.parse(DniNumber.parse("00000001"), DniLetter.parse("A")),
-      // FormatError: The leading 8 characters must be digits.
-      DNI.parse(DniNumber.parse("R"), DniLetter.parse("00000001")),
-      // FormatError: The leading 8 characters must be digits.
-      DNI.parse(DniNumber.parse("123BCD78"), DniLetter.parse("A")),
-      // FormatError: Invalid control letter.
-      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("U")),
-      // FormatError: Verify the DNI. Control letter does not match the number.
-      DNI.parse(DniNumber.parse("12345678"), DniLetter.parse("B"))
-    ).foreach(println)
+    println("== Valid DNIs ==")
+    println(DNI.parse(Number.parse(1), Letter.parse("R")))
+    println(DNI.parse(Number.parse(12345678), Letter.parse("Z")))
+
+    println("== Invalid DNIs ==")
+    println(" * Negative Number:")
+    println(DNI.parse(Number.parse(-1), Letter.parse("R")))
+    println(" * Too long number:")
+    println(DNI.parse(Number.parse(1234567890), Letter.parse("R")))
+    println(" * Incorrect control letter:")
+    println(DNI.parse(Number.parse(12345678), Letter.parse("Ñ")))
+    println(" * Control letter does not match the number:")
+    println(DNI.parse(Number.parse(1), Letter.parse("A")))
+    println(DNI.parse(Number.parse(12345678), Letter.parse("B")))

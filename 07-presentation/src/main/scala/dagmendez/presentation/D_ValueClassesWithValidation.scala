@@ -2,39 +2,46 @@ package dagmendez.presentation
 
 object D_ValueClassesWithValidation:
 
-  class DniNumber(val number: String):
+  class Number(val value: Int):
     require(
-      number.length == 8,
-      "There must be 8 numbers."
+      value > 0,
+      "Number has to be positive."
     )
     require(
-      number.forall(_.isDigit),
-      "The leading 8 characters must be digits."
+      value <= 99999999,
+      "Maximum amount of numbers is 8."
     )
-    override def toString: String = number
-  end DniNumber
+  end Number
 
-  class DniLetter(val letter: String):
+  class Letter(val value: String):
     require(
-      controlDigit.values.toVector.contains(letter),
+      controlDigit.values.exists(_controlDigit => value == _controlDigit),
       "Invalid control letter."
     )
-    override def toString: String = letter
-  end DniLetter
+  end Letter
 
-  class DNI(number: DniNumber, letter: DniLetter):
-    override def toString: String = s"$number-$letter"
-  
+  class DNI(number: Number, letter: Letter):
+
+    override def toString: String =
+      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
+      val readableDni             = numberWithLeadingZeroes.concat("-").concat(letter.value)
+      readableDni
+    end toString
+
   def main(args: Array[String]): Unit =
-    Vector(
-      // Valid DNIs
-      DNI(DniNumber("00000001"), DniLetter("R")),
-      DNI(DniNumber("12345678"), DniLetter("Z")),
-      // Invalid DNIs - Execution will crash
-      DNI(DniNumber("R"), DniLetter("00000001")),
-      DNI(DniNumber("123BCD78"), DniLetter("A")),
-      DNI(DniNumber("12345678"), DniLetter("U")),
-    ).foreach(println)
+
+    println("== Valid DNIs ==")
+    println(DNI(Number(1), Letter("R")))
+
+    // Remove comments for any Invalid DNI to make the program crush during runtime
+
+    // == Invalid DNIs ==
+    // Negative Number:
+    //println(DNI(Number(-1), Letter("R")))
+    // Too long number:
+    //println(DNI(Number(1234567890), Letter("R")))
+    // Incorrect control letter:
+    //println(DNI(Number(1), Letter("Ñ")))
 
 /**
  * Conclusion: Value Classes give us order enforcement and specialized errors.
