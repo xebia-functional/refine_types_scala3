@@ -6,14 +6,7 @@ object B_TypeAliases:
   type Letter = String
 
   class DNI(number: Number, letter: Letter):
-
-    override def toString: String =
-      val numberWithLeadingZeroes = addLeadingZeroes(number)
-      val readableDni             = numberWithLeadingZeroes.concat("-").concat(letter)
-      readableDni
-    end toString
-
-  end DNI
+    override def toString: String = prettyDNI(number, letter)
 
   def main(args: Array[String]): Unit =
 

@@ -21,12 +21,7 @@ object D_ValueClassesWithValidation:
   end Letter
 
   class DNI(number: Number, letter: Letter):
-
-    override def toString: String =
-      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
-      val readableDni             = numberWithLeadingZeroes.concat("-").concat(letter.value)
-      readableDni
-    end toString
+    override def toString: String = prettyDNI(number.value, letter.value)
 
   def main(args: Array[String]): Unit =
 
@@ -37,11 +32,11 @@ object D_ValueClassesWithValidation:
 
     // == Invalid DNIs ==
     // Negative Number:
-    //println(DNI(Number(-1), Letter("R")))
+    // println(DNI(Number(-1), Letter("R")))
     // Too long number:
-    //println(DNI(Number(1234567890), Letter("R")))
+    // println(DNI(Number(1234567890), Letter("R")))
     // Incorrect control letter:
-    //println(DNI(Number(1), Letter("Ñ")))
+    // println(DNI(Number(1), Letter("Ñ")))
 
 /**
  * Conclusion: Value Classes give us order enforcement and specialized errors.

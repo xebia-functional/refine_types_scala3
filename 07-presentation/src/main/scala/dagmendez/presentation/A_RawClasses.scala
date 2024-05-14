@@ -3,14 +3,7 @@ package dagmendez.presentation
 object A_RawClasses:
 
   class DNI(number: Int, letter: String):
-
-    override def toString: String =
-      val numberWithLeadingZeroes = addLeadingZeroes(number)
-      val readableDni             = numberWithLeadingZeroes.concat("-").concat(letter)
-      readableDni
-    end toString
-
-  end DNI
+    override def toString: String = prettyDNI(number, letter)
 
   def main(args: Array[String]): Unit =
 

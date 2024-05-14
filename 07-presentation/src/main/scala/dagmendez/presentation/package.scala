@@ -30,14 +30,22 @@ package object presentation:
   )
 
   /**
-   * Takes the number, casts it to String and prepends as many zeroes (0) as needed until the length is 8.
+   * Takes the number, casts it to String and prepends as many zeroes (0) as needed until the length is 8. Then appends a dash (-) and the letter.
    * @param number
-   *   input number
+   *   DNI number of any type that is a sub type of Int.
+   * @param letter
+   *   DNI letter of any type that is a sub type of String.
    * @tparam N
-   *   any type that is a sub-type of Int or an Int
+   *   Any sub type of Int
+   * @tparam S
+   *   Any subtype of String
    * @return
-   *   a String of length 8
+   *   a human readable DNI
    */
-  def addLeadingZeroes[N <: Int](number: N): String = String.format("%08d", number.asInstanceOf[Int])
+  def prettyDNI[N <: Int, S <: String](number: N, letter: S): String =
+    String
+      .format("%08d", number.asInstanceOf[Int])
+      .concat("-")
+      .concat(letter)
 
   case class FormatError(reason: String) extends Exception(reason) with NoStackTrace

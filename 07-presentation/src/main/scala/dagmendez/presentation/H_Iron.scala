@@ -1,15 +1,14 @@
 package dagmendez.presentation
 
-
 import io.github.iltotore.iron.constraint.any.{DescribedAs, In}
 import io.github.iltotore.iron.constraint.numeric.{LessEqual, Positive}
 import io.github.iltotore.iron.{:|, RefinedTypeOps, autoRefine}
 object H_Iron:
 
-  opaque type PositiveNumber = Positive DescribedAs "Number has to be positive"
+  opaque type PositiveNumber   = Positive DescribedAs "Number has to be positive"
   opaque type NotTooLongNumber = LessEqual[99999999] DescribedAs "Maximum amount of numbers is 8"
-  opaque type ValidNumber = PositiveNumber & NotTooLongNumber
-  opaque type Number   = Int :| ValidNumber
+  opaque type ValidNumber      = PositiveNumber & NotTooLongNumber
+  opaque type Number           = Int :| ValidNumber
   object Number extends RefinedTypeOps[Int, ValidNumber, Number]
   extension (number: Number) inline def value: Int = number
 
@@ -21,26 +20,21 @@ object H_Iron:
   extension (letter: Letter) inline def value: String = letter
 
   class DNI(number: Number, letter: Letter):
-    override def toString: String =
-      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
-      val readableDni = numberWithLeadingZeroes.concat("-").concat(letter.value)
-      readableDni
-    end toString
-  end DNI
+    override def toString: String = prettyDNI(number, letter)
 
   object DNI:
     def parse(
-               possibleNumber: Either[String, Number],
-               possibleLetter: Either[String, Letter]
-             ): Either[String, DNI] =
+        possibleNumber: Either[String, Number],
+        possibleLetter: Either[String, Letter]
+    ): Either[String, DNI] =
       for
         number <- possibleNumber
         letter <- possibleLetter
         dni <- Either.cond(
-          letter.value == controlDigit(number.value % 23),
-          new DNI(number, letter),
-          "Control letter does not match the number."
-        )
+                 letter.value == controlDigit(number.value % 23),
+                 new DNI(number, letter),
+                 "Control letter does not match the number."
+               )
       yield dni
   end DNI
 
@@ -57,11 +51,11 @@ object H_Iron:
 
     // Compile time errors. If you uncomment this cases, the code won't compile
     // Negative Number:
-    //println(DNI.parse(Number(-1), Letter("R")))
+    // println(DNI.parse(Number(-1), Letter("R")))
     // Too long number:"
-    //println(DNI.parse(Number(1234567890), Letter("R")))
+    // println(DNI.parse(Number(1234567890), Letter("R")))
     // Incorrect control letter:
-    //println(DNI.parse(Number(12345678), Letter("Ñ")))
+    // println(DNI.parse(Number(12345678), Letter("Ñ")))
 
     println("=== Run time Validation ===")
     println("== Valid DNIs ==")

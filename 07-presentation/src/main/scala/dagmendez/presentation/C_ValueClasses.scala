@@ -7,11 +7,7 @@ object C_ValueClasses:
   class Letter(val value: String)
 
   class DNI(number: Number, letter: Letter):
-    override def toString: String =
-      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
-      val readableDni             = numberWithLeadingZeroes.concat("-").concat(letter.value)
-      readableDni
-    end toString
+    override def toString: String = prettyDNI(number.value, letter.value)
 
   def main(args: Array[String]): Unit =
     println("== Valid DNIs ==")

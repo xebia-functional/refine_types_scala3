@@ -1,6 +1,5 @@
 package dagmendez.presentation
 
-
 object F_OpaqueTypes:
 
   opaque type Number = Int
@@ -29,18 +28,13 @@ object F_OpaqueTypes:
   extension (letter: Letter) inline def value: String = letter
 
   class DNI private (number: Number, letter: Letter):
-    override def toString: String =
-      val numberWithLeadingZeroes = addLeadingZeroes(number.value)
-      val readableDni = numberWithLeadingZeroes.concat("-").concat(letter.value)
-      readableDni
-    end toString
-  end DNI
+    override def toString: String = prettyDNI(number, letter)
 
   object DNI:
     def parse(
-               possibleNumber: Either[FormatError, Number],
-               possibleLetter: Either[FormatError, Letter]
-             ): Either[FormatError, DNI] =
+        possibleNumber: Either[FormatError, Number],
+        possibleLetter: Either[FormatError, Letter]
+    ): Either[FormatError, DNI] =
       for
         number <- possibleNumber
         letter <- possibleLetter
