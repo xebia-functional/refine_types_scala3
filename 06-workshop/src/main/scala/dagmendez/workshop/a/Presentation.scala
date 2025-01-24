@@ -1,7 +1,7 @@
 package dagmendez.workshop.a
 
-import scala.compiletime.*
-import scala.compiletime.ops.int.*
+import scala.compiletime._
+import scala.compiletime.ops.int._
 
 object Presentation:
 

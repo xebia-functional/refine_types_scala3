@@ -1,7 +1,7 @@
 package dagmendez.standard
 
-import dagmendez.standard.domain.*
-import dagmendez.standard.opaqueTypes.*
+import dagmendez.standard.domain._
+import dagmendez.standard.opaqueTypes._
 
 object Main:
 

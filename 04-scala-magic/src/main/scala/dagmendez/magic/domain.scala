@@ -1,6 +1,6 @@
 package dagmendez.magic
 
-import dagmendez.magic.opaqueTypes.*
+import dagmendez.magic.opaqueTypes._
 
 object domain:
 

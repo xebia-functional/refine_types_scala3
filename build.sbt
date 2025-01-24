@@ -1,6 +1,6 @@
 ThisBuild / organization := "dagmendez"
 
-ThisBuild / scalaVersion := "3.3.3"
+ThisBuild / scalaVersion := "3.6.3"
 
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
@@ -63,15 +63,15 @@ lazy val presentation: Project = {
     .settings(
       name := "presentation",
       libraryDependencies ++= Seq(
-        "io.github.iltotore" %% "iron" % "2.5.0"
+        "io.github.iltotore" %% "iron" % "2.6.0"
       )
     )
 }
 
 lazy val commonScalacOptions = Seq(
   Compile / console / scalacOptions --= Seq(
-    "-Wunused:_",
-    "-Xfatal-warnings"
+    "-Xfatal-warnings",
+    "-Wunused:imports"
   ),
   Test / console / scalacOptions := (Compile / console / scalacOptions).value
 )

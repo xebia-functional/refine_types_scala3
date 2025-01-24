@@ -1,12 +1,17 @@
 package dagmendez.magic
 
+import scala.compiletime.codeOf
+import scala.compiletime.constValue
+import scala.compiletime.error
 import scala.compiletime.ops.any.==
 import scala.compiletime.ops.boolean.&&
-import scala.compiletime.ops.double.{<=, >=}
-import scala.compiletime.ops.string.{Length, Matches, Substring}
-import scala.compiletime.{codeOf, constValue, error}
+import scala.compiletime.ops.double.<=
+import scala.compiletime.ops.double.>=
+import scala.compiletime.ops.string.Length
+import scala.compiletime.ops.string.Matches
+import scala.compiletime.ops.string.Substring
 
-import dagmendez.magic.error.*
+import dagmendez.magic.error._
 
 object opaqueTypes:
 

@@ -1,6 +1,6 @@
 package dagmendez.advanced
 
-import dagmendez.advanced.opaqueTypes.*
+import dagmendez.advanced.opaqueTypes._
 object domain:
 
   // The account holder is the person who signs the contract for said account with the bank

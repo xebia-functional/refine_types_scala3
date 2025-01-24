@@ -2,9 +2,9 @@ package dagmendez.advanced
 
 import scala.util.control.NoStackTrace
 
-import dagmendez.advanced.domain.*
-import dagmendez.advanced.error.*
-import dagmendez.advanced.opaqueTypes.*
+import dagmendez.advanced.domain._
+import dagmendez.advanced.error._
+import dagmendez.advanced.opaqueTypes._
 
 object Main:
 

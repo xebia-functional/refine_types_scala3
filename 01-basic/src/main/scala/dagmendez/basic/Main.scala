@@ -1,7 +1,7 @@
 package dagmendez.basic
 
-import dagmendez.basic.domain.*
-import dagmendez.basic.typeAliases.*
+import dagmendez.basic.domain._
+import dagmendez.basic.typeAliases._
 
 object Main:
 

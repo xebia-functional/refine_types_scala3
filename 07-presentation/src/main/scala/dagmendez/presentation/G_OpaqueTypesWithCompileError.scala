@@ -1,10 +1,12 @@
 package dagmendez.presentation
 
+import scala.compiletime.constValue
+import scala.compiletime.error
 import scala.compiletime.ops.any.==
 import scala.compiletime.ops.boolean.&&
-import scala.compiletime.ops.int.{>, <=}
+import scala.compiletime.ops.int.<=
+import scala.compiletime.ops.int.>
 import scala.compiletime.ops.string.Matches
-import scala.compiletime.{constValue, error}
 
 object G_OpaqueTypesWithCompileError:
 

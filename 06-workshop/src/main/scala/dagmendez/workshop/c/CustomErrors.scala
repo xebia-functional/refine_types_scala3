@@ -1,8 +1,8 @@
 package dagmendez.workshop.c
 
-import scala.compiletime.*
-import scala.compiletime.ops.any.*
-import scala.compiletime.ops.string.*
+import scala.compiletime._
+import scala.compiletime.ops.any._
+import scala.compiletime.ops.string._
 
 /**
  * Each requirement will have its own error type.
