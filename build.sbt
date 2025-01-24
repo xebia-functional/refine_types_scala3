@@ -14,7 +14,7 @@ lazy val `opaque-types-and-inline`: Project =
       advanced,
       `scala-magic`,
       workshop,
-      presentation
+      iron
     )
 
 lazy val basic: Project =
@@ -56,12 +56,12 @@ lazy val `workshop`: Project = {
     )
 }
 
-lazy val presentation: Project = {
+lazy val iron: Project = {
   project
-    .in(file("07-presentation"))
+    .in(file("07-iron"))
     .settings(commonScalacOptions)
     .settings(
-      name := "presentation",
+      name := "iron",
       libraryDependencies ++= Seq(
         "io.github.iltotore" %% "iron" % "2.6.0"
       )

@@ -2,7 +2,7 @@ package dagmendez
 
 import scala.util.control.NoStackTrace
 
-package object presentation:
+package object iron:
   val controlDigit: Map[Int, String] = Map(
     0  -> "T",
     1  -> "R",
