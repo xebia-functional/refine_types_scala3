@@ -1,6 +1,6 @@
 package dagmendez.basic
 
-import dagmendez.basic.typeAliases.*
+import dagmendez.basic.typeAliases._
 
 object domain:
 

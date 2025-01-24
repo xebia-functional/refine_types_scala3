@@ -1,6 +1,6 @@
 package dagmendez.standard
 
-import dagmendez.standard.opaqueTypes.*
+import dagmendez.standard.opaqueTypes._
 
 object domain:
 

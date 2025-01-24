@@ -1,8 +1,12 @@
 package dagmendez.presentation
 
-import io.github.iltotore.iron.constraint.any.{DescribedAs, In}
-import io.github.iltotore.iron.constraint.numeric.{LessEqual, Positive}
-import io.github.iltotore.iron.{:|, RefinedTypeOps, autoRefine}
+import io.github.iltotore.iron.:|
+import io.github.iltotore.iron.RefinedTypeOps
+import io.github.iltotore.iron.autoRefine
+import io.github.iltotore.iron.constraint.any.DescribedAs
+import io.github.iltotore.iron.constraint.any.In
+import io.github.iltotore.iron.constraint.numeric.LessEqual
+import io.github.iltotore.iron.constraint.numeric.Positive
 object H_Iron:
 
   opaque type PositiveNumber   = Positive DescribedAs "Number has to be positive"

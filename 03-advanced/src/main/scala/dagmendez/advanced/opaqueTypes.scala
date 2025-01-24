@@ -1,8 +1,9 @@
 package dagmendez.advanced
 
-import scala.compiletime.{codeOf, error}
+import scala.compiletime.codeOf
+import scala.compiletime.error
 
-import dagmendez.advanced.error.*
+import dagmendez.advanced.error._
 
 object opaqueTypes:
 

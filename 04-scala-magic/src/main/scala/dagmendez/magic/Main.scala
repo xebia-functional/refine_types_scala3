@@ -2,8 +2,8 @@ package dagmendez.magic
 
 import scala.util.control.NoStackTrace
 
-import dagmendez.magic.domain.*
-import dagmendez.magic.opaqueTypes.*
+import dagmendez.magic.domain._
+import dagmendez.magic.opaqueTypes._
 
 object Main:
 
