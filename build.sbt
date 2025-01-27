@@ -74,7 +74,7 @@ lazy val neotype: Project = {
     .in(file("08-neotype"))
     .settings(commonScalacOptions)
     .settings(
-      name := "iron",
+      name := "neotype",
       libraryDependencies ++= Seq(
         "io.github.kitlangton" %% "neotype" % "0.3.10"
       )
