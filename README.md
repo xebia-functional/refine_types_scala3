@@ -22,7 +22,7 @@ How can we model _better_ this domain? The primitive types do not help us much. 
 
 ## Basic
 
-[Source Code](./01-basic/src/main/scala/dagmendez/basic)
+[Source Code](01-language-feature/src/main/scala/dagmendez/a)
 
 The basic way will be to declare just some `type aliases` for the underlying types. It works the same in Scala 2. For example:
 ```scala 3
@@ -60,7 +60,7 @@ Additional information in Alvin Alexander's [blog](https://alvinalexander.com/sc
 
 ## Standard
 
-[Source Code](./02-standard/src/main/scala/dagmendez/standard)
+[Source Code](01-language-feature/src/main/scala/dagmendez/b)
 
 Scala 3 includes a new way of declaring types that is _cheaper_ in terms of overhead. 
 Just add the soft keyword `opaque` in front of type. Now, the compiler only sees the opaque type during compilation.
@@ -110,7 +110,7 @@ Additional information in the [Scala 3 Documentation](https://docs.scala-lang.or
 
 ## Advanced
 
-[Source Code](./03-advanced/src/main/scala/dagmendez/advanced)
+[Source Code](01-language-feature/src/main/scala/dagmendez/c)
 
 So now, what happens in real applications? 
 Often times we will work with values that are unknown at runtime. Hence, we want certain kind of validation.
@@ -177,7 +177,7 @@ Full documentation on inlining at [Scala 3 reference for metaprogramming](https:
 
 ## Scala Magic
 
-[Source Code](04-scala-magic/src/main/scala/dagmendez/magic)
+[Source Code](01-language-feature/src/main/scala/dagmendez/d)
 
 How to implement refined types that are robust and maintainable? 
 Well, first, the validation algorithm has to be robust and should be _the same_ for the `apply` and `from` methods.
