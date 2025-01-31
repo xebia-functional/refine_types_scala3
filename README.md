@@ -38,7 +38,7 @@ Allows you to define refinements using basic assertions in plain Scala.
 
 - Compile-time Checked Values
 - Write validations as **plain, old Scala expressions**
-- Helpful compilation errors (_see below_)
+- Helpful compilation errors
 - No runtime allocations (Thanks to `inline` and `opaque type`)
 - Integrates with other libraries (e.g. `zio-json`, `circe`, `tapir`, etc.)
 
