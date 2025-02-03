@@ -16,10 +16,10 @@ object NeoType:
     override inline def validate(input: String): Boolean | String =
       if input.exists(_.isLetter) then "Illegal amount of letters in the ID"
       else
-        input.toLong match
-          case negative if negative <= 0L => s"$input is not positive. PositiveNumber must be positive"
-          case short if short > 99999999L => s"$input is too long. Maximum amount of numbers is 8"
-          case _                          => true
+        input.toInt match
+          case negative if negative <= 0 => s"$input is not positive. PositiveNumber must be positive"
+          case short if short > 99999999 => s"$input is too long. Maximum amount of numbers is 8"
+          case _                         => true
 
   type ValidControlLetter = ValidControlLetter.Type
   object ValidControlLetter extends Newtype[String]:
