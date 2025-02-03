@@ -6,20 +6,25 @@ object C_ValueClasses:
 
   class Letter(val value: String)
 
-  class DNI(number: Number, letter: Letter):
-    override def toString: String = prettyDNI(number.value, letter.value)
+  class DNI private (number: Number, letter: Letter):
+    override def toString: String = s"${number.value}-${letter.value}"
+
+  object DNI:
+    def apply(number: Int, letter: String): DNI =
+      new DNI(Number(number), Letter(letter))
+
+  val valid                   = DNI(1, "R")
+  val negativeNumber          = DNI(-1, "R")
+  val tooLongNumber           = DNI(1234567890, "R")
+  val invalidControlLetterDNI = DNI(1, "Ñ")
 
   def main(args: Array[String]): Unit =
     println("== Valid DNIs ==")
-    println(DNI(Number(1), Letter("R")))
-
+    println(valid)
     println("== Invalid DNIs ==")
-    println(" * Negative Number:")
-    println(DNI(Number(-1), Letter("R")))
-    println(" * Too long number:")
-    println(DNI(Number(1234567890), Letter("R")))
-    println(" * Incorrect control letter:")
-    println(DNI(Number(1), Letter("Ñ")))
+    println(negativeNumber)
+    println(tooLongNumber)
+    println(invalidControlLetterDNI)
 
 /**
  * Conclusion: Value Classes give us some enforcement of order but not much more.

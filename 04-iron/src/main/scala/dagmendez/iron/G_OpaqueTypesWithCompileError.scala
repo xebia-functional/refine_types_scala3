@@ -20,7 +20,7 @@ object G_OpaqueTypesWithCompileError:
       then number
       else if number <= 0 then error("Number has to be positive.")
       else error("Maximum amount of numbers is 8.")
-  extension (number: Number) inline def value: Int = number
+  extension (number: Number) inline def unwrap: Int = number
 
   opaque type Letter = String
 
@@ -30,34 +30,36 @@ object G_OpaqueTypesWithCompileError:
       then letter
       else error("Invalid control letter.")
 
-  extension (letter: Letter) inline def value: String = letter
+  extension (letter: Letter) inline def unwrap: String = letter
 
   class DNI private (number: Number, letter: Letter):
-    override def toString: String = prettyDNI(number, letter)
+    override def toString: String = s"${number.unwrap}-${letter.unwrap}"
 
   object DNI:
-    def parse(number: Number, letter: Letter): Either[FormatError, DNI] =
+    // Parameters are passed as opaque types because the values have to be known at compile time to be validated
+    def apply(number: Number, letter: Letter): Either[String, DNI] =
       Either.cond(
-        letter.value == controlDigit(number.value % 23),
-        DNI(number, letter),
-        FormatError("Control letter does not match the number.")
+        letter.unwrap == controlDigit(number.unwrap % 23),
+        new DNI(number, letter),
+        "Control letter does not match the number."
       )
-  end DNI
+
+  val valid1 = DNI(Number(1), Letter("R"))
+  val valid2 = DNI(Number(12345678), Letter("Z"))
+
+  val invalidDoesNotMatchLetter1 = DNI(Number(1), Letter("A"))
+  val invalidDoesNotMatchLetter2 = DNI(Number(12345678), Letter("B"))
+
+  // Compile time errors. If you uncomment this cases, the code won't compile
+  // val invalidNegative = DNI(Number(-1), Letter("R"))
+  // val invalidTooLong = DNI(Number(1234567890), Letter("R"))
+  // val invalidInvalidLetter = DNI(Number(12345678), Letter("Ñ"))
 
   def main(args: Array[String]): Unit =
     println("== Valid DNIs ==")
-    println(DNI.parse(Number(1), Letter("R")))
-    println(DNI.parse(Number(12345678), Letter("Z")))
+    println(valid1)
+    println(valid2)
 
     println("== Invalid DNIs ==")
-    println(" * Control letter does not match the number:")
-    println(DNI.parse(Number(1), Letter("A")))
-    println(DNI.parse(Number(12345678), Letter("B")))
-
-    // Compile time errors. If you uncomment this cases, the code won't compile
-    // Negative Number:
-    // println(DNI.parse(Number(-1), Letter("R")))
-    // Too long number:"
-    // println(DNI.parse(Number(1234567890), Letter("R")))
-    // Incorrect control letter:
-    // println(DNI.parse(Number(12345678), Letter("Ñ")))
+    println(invalidDoesNotMatchLetter1)
+    println(invalidDoesNotMatchLetter2)
