@@ -1,13 +1,16 @@
-package dagmendez.iron
+package dagmendez.libraries
+
+import dagmendez.common.ControlLetter
+import dagmendez.common.FailedValidation
+import dagmendez.common.InvalidControlLetter
 
 import io.github.iltotore.iron.:|
 import io.github.iltotore.iron.RefinedTypeOps
 import io.github.iltotore.iron.constraint.any.DescribedAs
-import io.github.iltotore.iron.constraint.any.In
 import io.github.iltotore.iron.constraint.numeric.LessEqual
 import io.github.iltotore.iron.constraint.numeric.Positive
 
-object H_Iron:
+object Iron:
 
   opaque type PositiveNumber   = Positive DescribedAs "Number has to be positive"
   opaque type NotTooLongNumber = LessEqual[99999999] DescribedAs "Maximum amount of numbers is 8"
@@ -16,25 +19,18 @@ object H_Iron:
   object Number extends RefinedTypeOps[Int, ValidNumber, Number]
   extension (number: Number) inline def unwrap: Int = number
 
-  opaque type ValidLetter =
-    In[("A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "V", "W", "X", "Y", "Z")] DescribedAs
-      "Invalid control letter."
-  opaque type Letter = String :| ValidLetter
-  object Letter extends RefinedTypeOps[String, ValidLetter, Letter]
-  extension (letter: Letter) inline def unwrap: String = letter
-
-  class DNI private (number: Number, letter: Letter):
-    override def toString: String = s"${number.unwrap}-${letter.unwrap}"
+  class DNI private (number: Number, letter: ControlLetter):
+    override def toString: String = s"${number.unwrap}-${letter}"
 
   object DNI:
-    def apply(number: Int, letter: String): Either[String, DNI] =
+    def apply(number: Int, letter: String): Either[String | FailedValidation, DNI] =
       for
         number <- Number.either(number)
-        letter <- Letter.either(letter)
+        letter <- ControlLetter.either(letter)
         dni <- Either.cond(
-          letter.unwrap == controlDigit(number.unwrap % 23),
+          ControlLetter.isValidId(number, letter),
           new DNI(number, letter),
-          "Control letter does not match the number."
+          InvalidControlLetter(letter.toString)
         )
       yield dni
 

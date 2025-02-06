@@ -1,8 +1,11 @@
-package dagmendez.neotype
+package dagmendez.libraries
 
 import scala.annotation.tailrec
 
-import neotype._
+import dagmendez.common.ControlLetter
+import dagmendez.common.NieLetter
+
+import neotype.*
 
 /**
  * This is an example of how to implement a basic validator for Spanish IDs, for nationals and foreign residents. Find the information on how the IDs
@@ -21,44 +24,26 @@ object NeoType:
           case short if short > 99999999 => s"$input is too long. Maximum amount of numbers is 8"
           case _                         => true
 
-  type ValidControlLetter = ValidControlLetter.Type
-  object ValidControlLetter extends Newtype[String]:
-    override inline def validate(input: String): Boolean | String =
-      if controlLetter.values.toSeq.contains(input.toCharArray.head) then true
-      else s"$input is not a valid control letter"
-
-  object ValidID extends Newtype[(ValidNumber, ValidControlLetter)]:
-    override def validate(input: (ValidNumber, ValidControlLetter)): Boolean | String =
-      val number = input._1.unwrap.toInt            // Extracts the underlying Int
-      val letter = input._2.unwrap.toCharArray.head // Extracts the underlying Char
-      if letter == controlLetter(number % 23) then true // Validates the control letter against the number
+  object ValidID extends Newtype[(ValidNumber, ControlLetter)]:
+    override def validate(input: (ValidNumber, ControlLetter)): Boolean | String =
+      val number = input._1.unwrap.toInt // Extracts the underlying Int
+      val letter = input._2              // Extracts the underlying letter
+      if ControlLetter.isValidId(number, letter) then true // Validates the control letter against the number
       else s"The control letter '$letter' is not matching the number"
 
-  /**
-   * The NIE initial letters are defined as an Enum to leverage the method "ordinal". The letter should be replaced by number like this:
-   *   - x -> 0
-   *   - y -> 1
-   *   - z -> 2
-   *
-   * Hence, do not alter the order of the enumeration.
-   */
-  enum NieLetter:
-    case X, Y, Z
-
-  class NIE(number: ValidNumber, letter: ValidControlLetter):
+  class NIE(number: ValidNumber, letter: ControlLetter):
     override def toString: String =
       // Head (char) is cast to String before casting it to Int to get the proper index.
       // For example - Char: '0'.toInt = 48
       // For example - String: "0".toInt = 0
       val nieLetterAsNumber: Int = number.unwrap.head.toString.toInt
       // Only 0, 1 and 2 are valid ordinals
-      val nieLetter: NieLetter  = NieLetter.fromOrdinal(nieLetterAsNumber)
-      val nieNumber: String     = number.unwrap.tail
-      val controlLetter: String = letter.unwrap
-      s"$nieLetter-$nieNumber-$controlLetter"
+      val nieLetter: NieLetter = NieLetter.fromOrdinal(nieLetterAsNumber)
+      val nieNumber: String    = number.unwrap.tail
+      s"$nieLetter-$nieNumber-$letter"
 
-  class DNI(number: ValidNumber, letter: ValidControlLetter):
-    override def toString: String = s"${number.unwrap}-${letter.unwrap}"
+  class DNI(number: ValidNumber, letter: ControlLetter):
+    override def toString: String = s"${number.unwrap}-${letter}"
 
   object ID:
     def parse(input: String): Either[String, DNI | NIE] =
@@ -87,9 +72,9 @@ object NeoType:
         for
           number <- ValidNumber.make(completeNumber)
           // Allows for the character to be both upper and lower case.
-          letter <- ValidControlLetter.make(letter.toUpperCase)
+          letter <- ControlLetter.either(letter.toUpperCase).fold(error => Left(error.toString), lt => Right(lt))
           // Validates if the control character matches the ID number
-          id <- ValidID.make(number, letter)
+          id <- ValidID.make(number, ControlLetter.valueOf(letter.toString.toUpperCase))
         yield
           if isNIE then NIE(id.unwrap._1, id.unwrap._2)
           else DNI(id.unwrap._1, id.unwrap._2)

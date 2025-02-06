@@ -1,4 +1,4 @@
-package dagmendez.iron
+package dagmendez.language
 
 import scala.compiletime.constValue
 import scala.compiletime.error
@@ -7,10 +7,11 @@ import scala.compiletime.ops.int.<=
 import scala.compiletime.ops.int.>
 import scala.compiletime.ops.string.Matches
 
+import dagmendez.common.controlLetter
+
 object G_OpaqueTypesWithCompileError:
 
   opaque type Number = Int
-
   object Number:
     inline def apply(number: Int): Number =
       inline if constValue[&&[      // Equal to: if (number > 0 && number <= 99999999)
@@ -39,7 +40,7 @@ object G_OpaqueTypesWithCompileError:
     // Parameters are passed as opaque types because the values have to be known at compile time to be validated
     def apply(number: Number, letter: Letter): Either[String, DNI] =
       Either.cond(
-        letter.unwrap == controlDigit(number.unwrap % 23),
+        letter.unwrap == controlLetter(number.unwrap % 23),
         new DNI(number, letter),
         "Control letter does not match the number."
       )
