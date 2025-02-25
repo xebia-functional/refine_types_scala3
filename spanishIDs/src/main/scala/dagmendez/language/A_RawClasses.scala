@@ -6,12 +6,16 @@ package dagmendez.language
  * In Scala, a regular class is defined using the 'class' keyword. Below are examples of DNI (Spanish National ID) and NIE (Foreign ID) classes
  *
  * Key Features of Regular Classes:
- *   1. Constructor parameters are defined directly in the class declaration
- *   2. Classes can have methods, fields, and other members
- *   3. Classes support method overriding using 'override' keyword
+ *   - Constructor parameters are defined directly in the class declaration
+ *   - Classes can have methods, fields, and other members
+ *   - Classes support method overriding using 'override' keyword
  *
- * Advantages of Regular Classes: + Straightforward object-oriented programming + Full support for inheritance and polymorphism + Encapsulation of
- * data and behavior + Flexibility in defining custom methods and fields + Support for constructor parameters with default values
+ * Advantages of Regular Classes: 
+ *   - Straightforward object-oriented programming
+ *   - Full support for inheritance and polymorphism
+ *   - Encapsulation of data and behavior
+ *   - Flexibility in defining custom methods and fields
+ *   - Support for constructor parameters with default values
  *
  * Disadvantages of Regular Classes:
  *   - Each instance creates a new object in memory
