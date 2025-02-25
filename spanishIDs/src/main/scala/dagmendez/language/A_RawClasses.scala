@@ -10,7 +10,7 @@ package dagmendez.language
  *   - Classes can have methods, fields, and other members
  *   - Classes support method overriding using 'override' keyword
  *
- * Advantages of Regular Classes: 
+ * Advantages of Regular Classes:
  *   - Straightforward object-oriented programming
  *   - Full support for inheritance and polymorphism
  *   - Encapsulation of data and behavior
