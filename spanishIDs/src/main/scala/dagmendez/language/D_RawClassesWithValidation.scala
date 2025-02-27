@@ -2,7 +2,36 @@ package dagmendez.language
 
 import dagmendez.common.controlLetter
 
-object D_ValueClassesWithValidation:
+/**
+ * =Regular Classes with Validation in Scala=
+ *
+ * Basic Syntax:
+ * {{{
+ *    class MyClass(val value: Int):
+ *      require(boolean_condition, "Error Message")
+ *      require(boolean_condition, "Error Message") // Multiple require statements can be defined
+ * }}}
+ *
+ * '''Key Language Features Used'''
+ *   - Constructor validation using 'require'
+ *   - Immutable class design
+ *
+ * ==Pros of Class-based Validation==
+ *   - Strong encapsulation of validation logic
+ *   - Immutability by design
+ *   - Clear separation of concerns
+ *   - Can have multiple parameters
+ *   - Full inheritance support
+ *   - More flexible than value classes
+ *
+ * ==Cons of Class-based Validation==
+ *   - Runtime overhead (object allocation)
+ *   - Memory footprint larger than value classes
+ *   - Potential performance impact with many instances
+ *   - GC pressure with large numbers of objects
+ */
+
+object D_RawClassesWithValidation:
 
   class NieLetter(val value: String):
     require(Set("X", "Y", "Z").contains(value.toUpperCase), "Valid NIE letters are X, Y, Z.")
@@ -48,7 +77,3 @@ object D_ValueClassesWithValidation:
     println(invalidNegativeNumber)
     println(invalidTooLongNumber)
     println(invalidControlLetterDNI)
-
-/**
- * Conclusion: Value Classes give us order enforcement and specialized errors.
- */
