@@ -4,14 +4,14 @@ package dagmendez.language
  * =Value Classes in Scala=
  *
  * A value class in Scala is a mechanism to define a wrapper around a single value without the runtime overhead of creating an actual instance of the
- * wrapper class.
+ * wrapper class. For the regular class to become a value class, it must contain only one parameter and extend 'AnyVal'.
  *
  * Basic Syntax:
  * {{{
- * class MyValueClass(val value: UnderlyingType) extends AnyVal
+ *    class MyValueClass(val value: UnderlyingType) extends AnyVal
  * }}}
  *
- * =Pros of Value Classes=
+ * ==Pros of Value Classes==
  *
  * '''Type Safety'''
  *   - Provides compile-time type checking
@@ -31,7 +31,7 @@ package dagmendez.language
  *   - Can add methods to primitive types without inheritance
  *   - Keeps related functionality together
  *
- * =Cons of Value Classes=
+ * ==Cons of Value Classes==
  *
  * '''Limited Validation'''
  *   - Value Classes give us some enforcement of order but not much more
@@ -49,10 +49,6 @@ package dagmendez.language
  * '''Limited Inheritance'''
  *   - Cannot be extended by other classes
  *   - Limited trait support
- *
- * =Practical Impact=
- * The code example shows how value classes can be used to create a type-safe representation of Spanish identification documents (DNI and NIE), but
- * also demonstrates their limitations in preventing invalid data at runtime.
  */
 
 object C_ValueClasses:
