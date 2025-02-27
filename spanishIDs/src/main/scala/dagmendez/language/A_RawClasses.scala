@@ -3,21 +3,26 @@ package dagmendez.language
 /**
  * =Regular Classes in Scala=
  *
- * In Scala, a regular class is defined using the 'class' keyword. Below are examples of DNI (Spanish National ID) and NIE (Foreign ID) classes
+ * A regular class is defined using the 'class' keyword.
+ *
+ * Basic Syntax:
+ * {{{
+ *    class A (paramA: ParamAType, ..., paramN: ParamNType)
+ * }}}
  *
  * '''Key Features of Regular Classes'''
  *   - Constructor parameters are defined directly in the class declaration
  *   - Classes can have methods, fields, and other members
  *   - Classes support method overriding using 'override' keyword
  *
- * =Pros of Regular Classes=
+ * ==Pros of Regular Classes==
  *   - Straightforward object-oriented programming
  *   - Full support for inheritance and polymorphism
  *   - Encapsulation of data and behavior
  *   - Flexibility in defining custom methods and fields
  *   - Support for constructor parameters with default values
  *
- * =Cons of Regular Classes=
+ * ==Cons of Regular Classes==
  *   - Each instance creates a new object in memory
  *   - Can't be used as type aliases (unlike case classes)
  *   - No built-in equals, hashCode, or toString methods (need manual implementation)
@@ -27,27 +32,9 @@ package dagmendez.language
 
 object A_RawClasses:
 
-  /**
-   * Regular class representing Spanish National ID (DNI)
-   *
-   * @param number
-   *   The numeric part of the DNI
-   * @param letter
-   *   The control letter
-   */
   class DNI(number: Int, letter: String):
     override def toString: String = s"$number-$letter"
 
-  /**
-   * Regular class representing Foreign ID (NIE)
-   *
-   * @param nieLetter
-   *   The initial letter (X, Y, or Z)
-   * @param number
-   *   The numeric part
-   * @param letter
-   *   The control letter
-   */
   class NIE(nieLetter: String, number: Int, letter: String):
     override def toString: String = s"$nieLetter-$number-$letter"
 
