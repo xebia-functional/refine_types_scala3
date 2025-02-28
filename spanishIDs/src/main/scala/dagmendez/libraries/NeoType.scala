@@ -2,8 +2,8 @@ package dagmendez.libraries
 
 import scala.annotation.tailrec
 
-import dagmendez.common.ControlLetter
-import dagmendez.common.NieLetter
+import dagmendez.libraries.common.ControlLetter
+import dagmendez.libraries.common.NieLetter
 
 import neotype.*
 
@@ -72,7 +72,7 @@ object NeoType:
         for
           number <- ValidNumber.make(completeNumber)
           // Allows for the character to be both upper and lower case.
-          letter <- ControlLetter.either(letter.toUpperCase).fold(error => Left(error.toString), lt => Right(lt))
+          letter <- ControlLetter.parse(letter.toUpperCase).fold(error => Left(error.toString), lt => Right(lt))
           // Validates if the control character matches the ID number
           id <- ValidID.make(number, ControlLetter.valueOf(letter.toString.toUpperCase))
         yield
