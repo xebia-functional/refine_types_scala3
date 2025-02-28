@@ -1,53 +1,33 @@
+
 ThisBuild / organization := "dagmendez"
 
-ThisBuild / scalaVersion := "3.3.1"
+ThisBuild / scalaVersion := "3.3.5"
 
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+
+ThisBuild / scalacOptions ++= Seq("-Wunused:all")
+
 
 lazy val `opaque-types-and-inline`: Project =
   project
     .in(file("."))
     .aggregate(
-      basic,
-      standard,
-      advanced,
-      `scala-magic`,
-      workshop
+      `language-feature`,
+      workshop,
+      spanishIDs
     )
 
-lazy val basic: Project =
+lazy val `language-feature`: Project =
   project
-    .in(file("01-basic"))
-    .settings(commonScalacOptions)
-    .settings(name := "basic")
-
-lazy val standard: Project =
-  project
-    .in(file("02-standard"))
-    .settings(commonScalacOptions)
-    .settings(name := "standard")
-
-lazy val advanced: Project =
-  project
-    .in(file("03-advanced"))
-    .settings(commonScalacOptions)
-    .settings(name := "advanced")
-
-lazy val `scala-magic`: Project =
-  project
-    .in(file("04-scala-magic"))
-    .settings(commonScalacOptions)
-    .settings(
-      name := "scala-magic",
-      libraryDependencies ++= Seq(
-      )
-    )
+    .in(file("01-language-feature"))
+    .settings(commonSettings)
+    .settings(name := "language-feature")
 
 lazy val `workshop`: Project = {
   project
-    .in(file("06-workshop"))
-    .settings(commonScalacOptions)
+    .in(file("02-workshop"))
+    .settings(commonSettings)
     .settings(
       name := "workshop",
       libraryDependencies ++= Seq(
@@ -55,10 +35,25 @@ lazy val `workshop`: Project = {
     )
 }
 
+lazy val spanishIDs: Project = {
+  project
+    .in(file("spanishIDs"))
+    .settings(commonSettings)
+    .settings(
+      name := "spanishIDs",
+      libraryDependencies ++= Seq(
+        "io.github.iltotore" %% "iron" % "2.6.0",
+        "io.github.kitlangton" %% "neotype" % "0.3.11"
+      )
+    )
+}
+
+lazy val commonSettings = commonScalacOptions ++ Seq(resolvers += "confluent" at "https://packages.confluent.io/maven/")
+
 lazy val commonScalacOptions = Seq(
   Compile / console / scalacOptions --= Seq(
-    "-Wunused:_",
-    "-Xfatal-warnings"
+    "-Xfatal-warnings",
+    "-Wunused:_"
   ),
   Test / console / scalacOptions := (Compile / console / scalacOptions).value
 )
