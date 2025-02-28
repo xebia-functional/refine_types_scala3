@@ -2,6 +2,7 @@ package dagmendez.language
 
 /**
  * =Opaque types with Validation in Scala=
+ *
  * Opaque types allow for type abstractions without runtime overhead. They provide type safety by defining new, distinct types from existing types and
  * ensuring the correct use of these abstractions.
  *
@@ -13,13 +14,15 @@ package dagmendez.language
  * opaque type OpaqueType = UnderlyingType
  *
  * object OpaqueType:
- *   def apply(value: UnderlyingType): OpaqueType = value
+ *   def apply(value: UnderlyingType): OpaqueType =
+ *     require(boolean_condition, "error message")
+ *     value
  * }}}
  *
  * '''Key Features'''
- *   - Encapsulation: Hides the underlying type outside its defining scope.
- *   - Type Safety: Prevents accidental misuse of types, ensuring stronger type guarantees.
- *   - No Runtime Overhead: Erased to the underlying type at runtime, preserving performance.
+ *   - Creates new types, like classes, enums, etc.
+ *   - They only exists at compile time
+ *   - Can implement many of the features of classes and can also have a companion object
  *
  * ==Pros of Opaque Types with Validation==
  *   - Enhanced Type Safety: Encapsulates implementation details, ensuring that only valid operations are performed on the type.
@@ -31,7 +34,7 @@ package dagmendez.language
  *   - Limited Interoperability: Sometimes difficult to work with libraries or frameworks expecting the underlying type.
  */
 
-object F_OpaqueTypesWithValidation:
+object E_OpaqueTypesWithValidation:
 
   opaque type NieLetter = String
   opaque type Number    = Int
@@ -63,6 +66,7 @@ object F_OpaqueTypesWithValidation:
   val valid2   = DNI(Number(12345678), Letter("Z"))
   val validNIE = NIE(NieLetter("X"), Number(1), Letter("R"))
 
+  // We include lazy so the values are not initialized till they are called in the println.
   lazy val invalidNIELetter           = NIE(NieLetter("A"), Number(1), Letter("R"))
   lazy val invalidNegative            = DNI(Number(-1), Letter("R"))
   lazy val invalidTooLong             = DNI(Number(1234567890), Letter("R"))
