@@ -49,7 +49,7 @@ object F_OpaqueTypesWithValidation:
       input
 
   object Letter:
-    def apply(input: String): NieLetter =
+    def apply(input: String): Letter =
       require(Set("T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B", "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E").contains(input))
       input
 
