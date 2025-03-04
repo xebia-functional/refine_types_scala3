@@ -1,4 +1,4 @@
-package dagmendez
+package dagmendez.libraries
 
 import scala.util.control.NoStackTrace
 
@@ -38,7 +38,7 @@ object common:
     case Z // 2
 
   object NieLetter:
-    def either(letter: String): Either[InvalidNieLetter, NieLetter] =
+    def parse(letter: String): Either[InvalidNieLetter, NieLetter] =
       Either.cond(
         NieLetter.values.map(_.toString).contains(letter),
         NieLetter.valueOf(letter),
@@ -73,7 +73,7 @@ object common:
     case E // 22
 
   object ControlLetter:
-    def either(letter: String): Either[InvalidControlLetter, ControlLetter] =
+    def parse(letter: String): Either[InvalidControlLetter, ControlLetter] =
       Either.cond(
         ControlLetter.values.map(_.toString).contains(letter),
         ControlLetter.valueOf(letter),
@@ -86,7 +86,7 @@ object common:
   sealed trait FailedValidation(cause: String) extends Exception with NoStackTrace:
     override def toString: String = cause
   case class InvalidNieLetter(wrongInput: String)     extends FailedValidation(s"'$wrongInput' is not a valid NIE letter")
-  case class InvalidDniLetter(wrongInput: String)     extends FailedValidation(s"'$wrongInput' is not a valid DNI letter")
+  case class InvalidIdLetter(wrongInput: String)      extends FailedValidation(s"'$wrongInput' is not a valid ID letter")
   case class InvalidControlLetter(wrongInput: String) extends FailedValidation(s"'$wrongInput' does not match the associated remainder letter")
   case class InvalidNumber(wrongInput: String)        extends FailedValidation(s"'$wrongInput' should only contain digits")
   case class InvalidNegativeNumber(wrongInput: Int)   extends FailedValidation(s"'$wrongInput' is negative. It must be positive")
