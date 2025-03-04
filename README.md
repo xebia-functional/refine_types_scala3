@@ -2,13 +2,13 @@
 
 They way types are refined in Scala 3 is more performant than Scala 2. 
 Thanks to `opaque types` and new `metaprogramming` techniques, refined types in Scala 3 can be evaluated at compile time.
-In situation where we do not know the value at compile time, `Either` wrappers around `error` or  `types` come handy to handle the validation process.
+In situations where we do not know the value at compile time, `Either` wrappers around `error` or  `types` come handy to handle the validation process.
 
 This repository contains various modules:
 - Language Feature: contains explanations in detail of how the Scala 3 metaprogramming techniques work to achieve "free" refined types.
 - Workshop: contains snippets of code that show the different trade-offs of multiple approaches to refining types
-- NeoType: Scala 3 only library that allows to refine types without having to work with the Type System
-- Iron: Scala 3 only library that allows to refine types and has a robust type system framework
+- NeoType: Refines types without having to work with the Type System (Scala 3 only)
+- Iron: Refines types and has a robust type system framework (Scala 3 only)
 
 ## Language Feature
 
@@ -38,7 +38,7 @@ Allows you to define refinements using basic assertions in plain Scala.
 
 - Compile-time Checked Values
 - Write validations as **plain, old Scala expressions**
-- Helpful compilation errors (_see below_)
+- Helpful compilation errors
 - No runtime allocations (Thanks to `inline` and `opaque type`)
 - Integrates with other libraries (e.g. `zio-json`, `circe`, `tapir`, etc.)
 

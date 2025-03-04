@@ -15,8 +15,7 @@ lazy val `opaque-types-and-inline`: Project =
     .aggregate(
       `language-feature`,
       workshop,
-      iron,
-      neotype
+      spanishIDs
     )
 
 lazy val `language-feature`: Project =
@@ -36,25 +35,14 @@ lazy val `workshop`: Project = {
     )
 }
 
-lazy val iron: Project = {
+lazy val spanishIDs: Project = {
   project
-    .in(file("04-iron"))
+    .in(file("spanishIDs"))
     .settings(commonSettings)
     .settings(
-      name := "iron",
+      name := "spanishIDs",
       libraryDependencies ++= Seq(
-        "io.github.iltotore" %% "iron" % "2.6.0"
-      )
-    )
-}
-
-lazy val neotype: Project = {
-  project
-    .in(file("03-neotype"))
-    .settings(commonSettings)
-    .settings(
-      name := "neotype",
-      libraryDependencies ++= Seq(
+        "io.github.iltotore" %% "iron" % "2.6.0",
         "io.github.kitlangton" %% "neotype" % "0.3.11"
       )
     )
